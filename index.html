@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedLine cars event | Wyjazdy Samochodowe na Dolnym Śląsku</title>
+    <!-- Agresywny font Montserrat dla nagłówków (RedLine style) oraz Inter do czytania tekstów -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Zmienne CSS - RedLine Dark Style */
+        :root {
+            --bg-color: #000000;
+            --surface-color: #0a0a0a;
+            --surface-hover: #141414;
+            --text-primary: #ffffff;
+            --text-secondary: #86868b;
+            --accent-color: #FF0000; /* Krwista czerwień RedLine */
+            --accent-text: #ffffff;
+            --border-radius-large: 16px; /* Nieco ostrzejsze rogi pasujące do agresywnego stylu */
+            --border-radius-small: 8px;
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Nowa typografia nagłówków (gruba, sportowa, agresywna) */
+        h1, h2, h3, .price-tag {
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* Klasy do animacji przy scrollowaniu */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Sekcja Hero z delikatną czerwoną poświatą */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            background: radial-gradient(circle at center, #1a0000 0%, #000000 100%);
+        }
+
+        .hero-logo {
+            max-width: 350px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+            line-height: 1.1;
+            max-width: 1000px;
+        }
+
+        .hero p {
+            font-size: clamp(1.2rem, 2vw, 1.5rem);
+            color: var(--text-secondary);
+            max-width: 950px;
+            margin-bottom: 40px;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: var(--accent-text);
+            padding: 16px 40px;
+            border-radius: 980px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            background-color: #cc0000;
+            box-shadow: 0 10px 25px rgba(255, 0, 0, 0.4);
+        }
+
+        /* Główne sekcje */
+        section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: var(--accent-color); /* Czerwone nagłówki sekcji */
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        /* Siatka Kart */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius-large);
+            padding: 40px;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 0, 0, 0.1); /* Delikatne czerwone ramki */
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            background-color: var(--surface-hover);
+            border-color: rgba(255, 0, 0, 0.3);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .card p, .card ul {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+        
+        .card ul {
+            list-style-type: none;
+            margin-top: 15px;
+        }
+
+        .card ul li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .card ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+        }
+
+        /* Sekcja Ceny */
+        .pricing {
+            text-align: center;
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius-large);
+            padding: 60px 40px;
+            margin-bottom: 0px; 
+            border: 1px solid rgba(255, 0, 0, 0.1);
+        }
+
+        .pricing h2 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        
+        .pricing .price-tag {
+            font-size: 4.5rem;
+            font-weight: 900;
+            margin: 20px 0;
+            color: var(--accent-color);
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+        }
+
+        /* Sekcja Jeździli z nami - Lista w formie stylowych tagów z dedykowanymi kolorami hover */
+        .cars-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .car-pill {
+            background-color: var(--surface-color);
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 980px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        /* Indywidualne kolory hover dla każdego auta (zgodnie z listą) */
+        .car-pill.dodge:hover { background-color: #8E9492; color: #000000; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(142, 148, 146, 0.3); }
+        .car-pill.m4:hover { background-color: #E60000; color: #ffffff; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(230, 0, 0, 0.3); }
+        .car-pill.a45s:hover { background-color: #565F64; color: #ffffff; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(86, 95, 100, 0.3); }
+        .car-pill.s4:hover { background-color: #808080; color: #ffffff; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(128, 128, 128, 0.3); }
+        .car-pill.rs3-limo:hover { background-color: #686A6C; color: #ffffff; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(104, 106, 108, 0.3); }
+        .car-pill.rsq8:hover { background-color: #686A6C; color: #ffffff; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(104, 106, 108, 0.3); }
+        .car-pill.q60:hover { background-color: #001F3F; color: #ffffff; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0, 31, 63, 0.4); }
+        .car-pill.s3:hover { background-color: #87CEEB; color: #000000; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(135, 206, 235, 0.3); }
+        .car-pill.m440i:hover { background-color: #212020; color: #ffffff; border-color: #444; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1); }
+        .car-pill.rs3-sport:hover { background-color: #686A6C; color: #ffffff; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(104, 106, 108, 0.3); }
+        .car-pill.a5:hover { background-color: #81D8D0; color: #000000; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(129, 216, 208, 0.3); }
+
+        /* Sekcja Galerii */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 16px;
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1 / 1;
+            border-radius: var(--border-radius-small);
+            overflow: hidden;
+            background-color: var(--surface-hover);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+        }
+
+        .gallery-item img, 
+        .gallery-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover img,
+        .gallery-item:hover video {
+            transform: scale(1.05);
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 0, 0, 0.8); /* Czerwony przycisk play */
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+            pointer-events: none;
+        }
+
+        .play-icon svg {
+            width: 20px;
+            height: 20px;
+            margin-left: 4px;
+            fill: currentColor;
+        }
+
+        /* Formularz */
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: var(--surface-color);
+            padding: 50px;
+            border-radius: var(--border-radius-large);
+            border: 1px solid rgba(255, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="tel"],
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 16px;
+            background-color: #000;
+            border: 1px solid #333;
+            border-radius: var(--border-radius-small);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="tel"]:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.15);
+        }
+
+        .form-group input[type="file"]::file-selector-button {
+            background-color: #222;
+            color: white;
+            border: 1px solid #444;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 15px;
+            transition: var(--transition);
+        }
+
+        .form-group input[type="file"]::file-selector-button:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+            border-top: 1px solid #222;
+            margin-top: 50px;
+        }
+
+        /* Link do social mediów w stopce */
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            color: var(--accent-color);
+        }
+
+        .social-link svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* Responsywność */
+        @media (max-width: 992px) {
+            .gallery-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .form-container { padding: 30px 20px; }
+            section { padding: 60px 20px; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .car-pill { padding: 10px 18px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <!-- DODANE LOGO REDLINE -->
+        <img src="RED LINE LOGO.jpg" alt="RedLine cars event Logo" class="reveal hero-logo">
+        
+        <h1 class="reveal">Poczuj drogę.<br>Dolny Śląsk czeka.</h1>
+        <p class="reveal">Zostaw miasto w lusterku wstecznym. Dołącz do zamkniętej grupy kierowców na 164-kilometrowej trasie przez najlepsze zakręty regionu.</p>
+        <a href="#zapisy" class="btn-primary reveal">Zgłoś auto</a>
+    </header>
+
+    <section class="features">
+        <div class="section-header reveal">
+            <h2>Stworzone dla kierowców</h2>
+            <p>Nie organizujemy wycieczek. Organizujemy wyjazdy dla tych, którzy kochają prowadzić.</p>
+        </div>
+
+        <div class="grid">
+            <div class="card reveal">
+                <h3>Elitarna Grupa</h3>
+                <p>M, RS, AMG. Z nami jeździli już właściciele takich maszyn jak Dodge Challenger, BMW M4, Audi RS Q8 MTM czy Mercedes-AMG A 45 S. Czas na Ciebie.</p>
+            </div>
+            <div class="card reveal">
+                <h3>Idealna Pętla</h3>
+                <p>164 km czystej frajdy. Zaczynamy z pinezki, lecimy przez Karpacz, Kowary, Wojcieszów i Bolków. Świetne drogi lokalne, szybka DK5 i S3, by dać silnikom pooddychać.</p>
+            </div>
+            <div class="card reveal">
+                <h3>Klimat i Detale</h3>
+                <p>Zero lania wody. Zapach hamulców, ryk wydechów i 7 zaplanowanych pitstopów na genialne zdjęcia Twojego auta. Na trasie łapiemy też dobrą kuchnię (np. Mazurkowa Chata).</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="reveal">
+        <div class="pricing">
+            <h2>Proste zasady.</h2>
+            <p>Skupiasz się na jeździe, dobrych zakrętach i pełnym baku.</p>
+            <div class="price-tag">100 zł</div>
+            <p style="color: var(--text-secondary);">od auta / za cały wyjazd</p>
+        </div>
+    </section>
+
+    <!-- SEKCJA JEŹDZILI Z NAMI (Usunięte dźwięki, zachowane kolory hover i linki do zdjęć) -->
+    <section id="uczestnicy" class="reveal">
+        <div class="section-header">
+            <h2>Jeździli z nami</h2>
+            <p>Maszyny, które do tej pory pokonywały z nami dolnośląskie winkle. Kliknij nazwę, by zobaczyć zdjęcie.</p>
+        </div>
+        <div class="cars-list">
+            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=Dodge+Challenger" target="_blank" class="car-pill dodge">Dodge Challenger</a>
+            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=BMW+M4" target="_blank" class="car-pill m4">BMW M4</a>
+            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=Mercedes+Benz+A45S+AMG" target="_blank" class="car-pill a45s">Mercedes Benz A45S AMG</a>
+            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=Audi+S4" target="_blank" class="car-pill s4">Audi S4</a>
+            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=Audi+RS3+Limousine" target="_blank" class="car-pill rs3-limo">Audi RS3 Limousine</a>
+            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=Audi+RS+Q8+MTM" target="_blank" class="car-pill rsq8">Audi RS Q8 MTM</a>
+            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=Infiniti+Q60" target="_blank" class="car-pill q60">Infiniti Q60</a>
+            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=Audi+S3+450HP" target="_blank" class="car-pill s3">Audi S3 450HP</a>
+            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=BMW+M440i" target="_blank" class="car-pill m440i">BMW M440i</a>
+            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=Audi+RS3+Sportback" target="_blank" class="car-pill rs3-sport">Audi RS3 Sportback</a>
+            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=Audi+A5" target="_blank" class="car-pill a5">Audi A5</a>
+        </div>
+    </section>
+
+    <!-- SEKCJA GALERII -->
+    <section id="galeria" class="reveal">
+        <div class="section-header">
+            <h2>W obiektywie</h2>
+            <p>Zobacz ujęcia z naszych poprzednich przejazdów po Dolnym Śląsku.</p>
+        </div>
+        
+        <div class="gallery-grid">
+            <!-- Rząd 1: Wideo (6 kafelków) -->
+            <div class="gallery-item">
+                <img src="https://placehold.co/400x400/2c2c2e/86868b?text=Wideo+1" alt="Miniaturka Wideo">
+                <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://placehold.co/400x400/2c2c2e/86868b?text=Wideo+2" alt="Miniaturka Wideo">
+                <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://placehold.co/400x400/2c2c2e/86868b?text=Wideo+3" alt="Miniaturka Wideo">
+                <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://placehold.co/400x400/2c2c2e/86868b?text=Wideo+4" alt="Miniaturka Wideo">
+                <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://placehold.co/400x400/2c2c2e/86868b?text=Wideo+5" alt="Miniaturka Wideo">
+                <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://placehold.co/400x400/2c2c2e/86868b?text=Wideo+6" alt="Miniaturka Wideo">
+                <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+            </div>
+
+            <!-- Rząd 2: Zdjęcia (6 kafelków) -->
+            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+1" alt="Auto na trasie"></div>
+            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+2" alt="Auto na trasie"></div>
+            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+3" alt="Auto na trasie"></div>
+            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+4" alt="Auto na trasie"></div>
+            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+5" alt="Auto na trasie"></div>
+            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+6" alt="Auto na trasie"></div>
+
+            <!-- Rząd 3: Zdjęcia (6 kafelków) -->
+            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+7" alt="Auto na trasie"></div>
+            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+8" alt="Auto na trasie"></div>
+            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+9" alt="Auto na trasie"></div>
+            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+10" alt="Auto na trasie"></div>
+            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+11" alt="Auto na trasie"></div>
+            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+12" alt="Auto na trasie"></div>
+        </div>
+    </section>
+
+    <section id="zapisy" class="reveal">
+        <div class="section-header">
+            <h2>Zarezerwuj miejsce</h2>
+            <p>Wypełnij formularz. Odezwiemy się ze szczegółami najbliższego wyjazdu.</p>
+        </div>
+
+        <div class="form-container">
+            <!-- PAMIĘTAJ: Zamień zgłoszenia@twojadomena.pl na swój prawdziwy adres e-mail! -->
+            <form action="https://formsubmit.co/zgłoszenia@twojadomena.pl" method="POST" enctype="multipart/form-data">
+                
+                <!-- Ukryte opcje FormSubmit (wyłączona uciążliwa weryfikacja captcha dla płynności) -->
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_subject" value="Nowe zgłoszenie - RedLine cars event!">
+
+                <div class="form-group">
+                    <label for="name">Imię kierowcy</label>
+                    <input type="text" id="name" name="Imię" required placeholder="np. Tomek">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Kontakt / Nr telefonu</label>
+                    <input type="tel" id="phone" name="Telefon" required placeholder="np. +48 123 456 789">
+                </div>
+
+                <div class="form-group">
+                    <label for="car">Marka i model auta</label>
+                    <input type="text" id="car" name="Auto" required placeholder="np. BMW M440i">
+                </div>
+
+                <div class="form-group">
+                    <label for="photo">Zdjęcie auta (opcjonalnie, mocno pożądane)</label>
+                    <input type="file" id="photo" name="Zdjęcie_Auta" accept="image/*">
+                </div>
+
+                <button type="submit" class="btn-primary">Wyślij zgłoszenie</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <a href="https://www.instagram.com/redline.oneee/" target="_blank" class="social-link">
+            <!-- Ikonka Instagrama SVG -->
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+            </svg>
+            Obserwuj nas na Instagramie
+        </a>
+        <p>&copy; 2026 RedLine cars event. Stworzone z pasją do motoryzacji.</p>
+    </footer>
+
+    <!-- Skrypt dodający satysfakcjonujące animacje i losowe auta w formularzu -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Animacje przy przewijaniu
+            const reveals = document.querySelectorAll(".reveal");
+
+            const revealOnScroll = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("active");
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            });
+
+            reveals.forEach(reveal => {
+                revealOnScroll.observe(reveal);
+            });
+            
+            // Animacja Hero odpala się natychmiast po załadowaniu
+            setTimeout(() => {
+                document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('active'));
+            }, 100);
+
+            // Losowe auto w placeholderze formularza
+            const carModels = [
+                "BMW M4 Competition xDrive", "Audi RS6 Avant", "Mercedes-AMG E 63 S", 
+                "BMW M5 Competition", "Audi RS7 Sportback", "Mercedes-AMG GT 63 S 4-Door Coupe", 
+                "BMW M3 Touring", "Audi RS e-tron GT", "Mercedes-AMG C 63 S E Performance", 
+                "BMW M2 Coupe", "Mercedes-AMG GT S", "Porsche 911 Carrera GTS", 
+                "Porsche Cayman GT4 RS", "Aston Martin Vantage V8", "Ferrari California T", 
+                "Lotus Emira V6", "Jaguar F-Type SVR", "Audi RS4 Avant", "BMW Z4 M Coupe", 
+                "Audi R8 V10 Manual", "Honda NSX", "Ford Mustang Shelby GT500", 
+                "Chevrolet Camaro ZL1 1LE", "Toyota Supra", "Lexus LC 500 V8", "Audi RS3", 
+                "Mercedes-AMG A 45 S", "BMW M440i xDrive", "Audi RS5 Coupe", 
+                "Audi RS5 Sportback", "BMW M340i xDrive", "BMW M240i xDrive", 
+                "Mercedes-AMG CLA 45 S", "Mercedes-AMG C 43", "Mercedes-AMG GLA 45 S", 
+                "Audi RS Q3 Sportback", "BMW X3 M Competition", "Alfa Romeo Giulia Quadrifoglio"
+            ];
+            
+            const randomCar = carModels[Math.floor(Math.random() * carModels.length)];
+            const carInput = document.getElementById("car");
+            
+            if(carInput) {
+                carInput.placeholder = "np. " + randomCar;
+            }
+        });
+    </script>
+</body>
+</html>
