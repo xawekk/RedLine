@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RedLine cars event | Wyjazdy Samochodowe na Dolnym Śląsku</title>
-    <!-- Agresywny font Montserrat dla nagłówków (RedLine style) oraz Inter do czytania tekstów -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <!-- Agresywny font Russo One dla nagłówków oraz Inter do czytania tekstów -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Russo+One&display=swap" rel="stylesheet">
     
     <style>
         /* Zmienne CSS - RedLine Dark Style */
@@ -15,9 +15,9 @@
             --surface-hover: #141414;
             --text-primary: #ffffff;
             --text-secondary: #86868b;
-            --accent-color: #FF0000;
+            --accent-color: #FF0000; /* Krwista czerwień RedLine */
             --accent-text: #ffffff;
-            --border-radius-large: 16px;
+            --border-radius-large: 16px; 
             --border-radius-small: 8px;
             --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -37,9 +37,11 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        /* Nowa typografia nagłówków (szeroka, sportowa, agresywna) */
         h1, h2, h3, .price-tag {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Russo One', sans-serif;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .reveal {
@@ -67,14 +69,14 @@
             max-width: 350px;
             width: 100%;
             margin-bottom: 30px;
+            /* Trik usuwający czarne tło z JPG: */
+            mix-blend-mode: lighten;
         }
 
         .hero h1 {
             font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 900;
-            letter-spacing: -0.02em;
             margin-bottom: 20px;
-            line-height: 1.1;
+            line-height: 1.2;
             max-width: 1000px;
         }
 
@@ -91,10 +93,10 @@
             color: var(--accent-text);
             padding: 16px 40px;
             border-radius: 980px;
+            font-family: 'Russo One', sans-serif;
             font-size: 1.1rem;
-            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             text-decoration: none;
             transition: var(--transition);
             cursor: pointer;
@@ -120,7 +122,6 @@
 
         .section-header h2 {
             font-size: 2.5rem;
-            font-weight: 800;
             margin-bottom: 15px;
             color: var(--accent-color);
         }
@@ -196,7 +197,6 @@
         
         .pricing .price-tag {
             font-size: 4.5rem;
-            font-weight: 900;
             margin: 20px 0;
             color: var(--accent-color);
             text-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
@@ -513,7 +513,6 @@
         </div>
 
         <div class="form-container">
-            <!-- PODMIENIONY ADRES E-MAIL -->
             <form action="https://formsubmit.co/RedLinecars@proton.me" method="POST" enctype="multipart/form-data">
                 
                 <input type="hidden" name="_captcha" value="false">
