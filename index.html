@@ -15,7 +15,7 @@
             --surface-hover: #141414;
             --text-primary: #ffffff;
             --text-secondary: #86868b;
-            --accent-color: #FF0000; /* Krwista czerwień RedLine */
+            --accent-color: #FF0000;
             --accent-text: #ffffff;
             --border-radius-large: 16px; 
             --border-radius-small: 8px;
@@ -37,7 +37,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Nowa typografia nagłówków (szeroka, sportowa, agresywna) */
         h1, h2, h3, .price-tag {
             font-family: 'Russo One', sans-serif;
             text-transform: uppercase;
@@ -69,7 +68,6 @@
             max-width: 350px;
             width: 100%;
             margin-bottom: 30px;
-            /* Trik usuwający czarne tło z JPG: */
             mix-blend-mode: lighten;
         }
 
@@ -197,9 +195,38 @@
         
         .pricing .price-tag {
             font-size: 4.5rem;
-            margin: 20px 0;
+            margin: 10px 0;
             color: var(--accent-color);
             text-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+        }
+
+        .pricing-features {
+            text-align: left;
+            max-width: 600px;
+            margin: 30px auto 0 auto;
+            list-style: none;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+
+        .pricing-features li {
+            margin-bottom: 15px;
+            padding-left: 35px;
+            position: relative;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .pricing-features strong {
+            color: #fff;
+            font-weight: 600;
         }
 
         .cars-list {
@@ -263,30 +290,6 @@
         .gallery-item:hover img,
         .gallery-item:hover video {
             transform: scale(1.05);
-        }
-
-        .play-icon {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(255, 0, 0, 0.8);
-            color: white;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(4px);
-            pointer-events: none;
-        }
-
-        .play-icon svg {
-            width: 20px;
-            height: 20px;
-            margin-left: 4px;
-            fill: currentColor;
         }
 
         .form-container {
@@ -399,7 +402,7 @@
     <header class="hero">
         <img src="RED LINE LOGO.jpg" alt="RedLine cars event Logo" class="reveal hero-logo">
         <h1 class="reveal">Poczuj drogę.<br>Dolny Śląsk czeka.</h1>
-        <p class="reveal">Zostaw miasto w lusterku wstecznym. Dołącz do zamkniętej grupy kierowców na 164-kilometrowej trasie przez najlepsze zakręty regionu.</p>
+        <p class="reveal">Zostaw miasto w lusterku wstecznym. Dołącz do zamkniętej grupy kierowców na starannie wyselekcjonowanej trasie przez najlepsze zakręty regionu.</p>
         <a href="#zapisy" class="btn-primary reveal">Zgłoś auto</a>
     </header>
 
@@ -414,23 +417,33 @@
                 <h3>Elitarna Grupa</h3>
                 <p>M, RS, AMG. Z nami jeździli już właściciele takich maszyn jak Dodge Challenger, BMW M4, Audi RS Q8 MTM czy Mercedes-AMG A 45 S. Czas na Ciebie.</p>
             </div>
+            
+            <!-- NOWA SEKCJA TRASY BEZ LINKU DO MAPY -->
             <div class="card reveal">
-                <h3>Idealna Pętla</h3>
-                <p>164 km czystej frajdy. Zaczynamy z pinezki, lecimy przez Karpacz, Kowary, Wojcieszów i Bolków. Świetne drogi lokalne, szybka DK5 i S3, by dać silnikom pooddychać.</p>
+                <h3>Trasa II Edycji</h3>
+                <p>195 km czystej frajdy zaplanowane na <strong>29 sierpnia 2026</strong>. Zaczynamy z tajnej pinezki, przecinamy najlepsze winkle Karkonoszy – Świeradów-Zdrój, Szklarską Porębę i Karpacz, mocno zahaczając o czeską stronę. Równe 4 godziny jazdy, 8 pitstopów i meta na zasłużony posiłek w Restauracji Goduszyn.</p>
             </div>
+            
             <div class="card reveal">
                 <h3>Klimat i Detale</h3>
-                <p>Zero lania wody. Zapach hamulców, ryk wydechów i 7 zaplanowanych pitstopów na genialne zdjęcia Twojego auta. Na trasie łapiemy też dobrą kuchnię (np. Mazurkowa Chata).</p>
+                <p>Zero lania wody. Zapach hamulców, ryk wydechów i zaplanowane pitstopy na genialne zdjęcia Twojego auta. Zatrzymujemy się też, by po prostu dobrze zjeść i pogadać o maszynach.</p>
             </div>
         </div>
     </section>
 
     <section class="reveal">
         <div class="pricing">
-            <h2>Proste zasady.</h2>
-            <p>Skupiasz się na jeździe, dobrych zakrętach i pełnym baku.</p>
+            <h2>Jasny układ.</h2>
+            <p>Skupiasz się na jeździe, dobrych zakrętach i pełnym baku. Resztę bierzemy na siebie.</p>
+            
             <div class="price-tag">100 zł</div>
             <p style="color: var(--text-secondary);">od auta / za cały wyjazd</p>
+
+            <ul class="pricing-features">
+                <li><strong>Walkie-talkie w każdym aucie</strong> – dostajesz krótkofalówkę do bezpośredniej komunikacji. Nawigujemy na bieżąco, rozmawiamy i tworzymy wyścigowy klimat.</li>
+                <li><strong>Pełna opieka na trasie</strong> – nasz pilot prowadzi grupę i nadaje tempo. Nie musisz martwić się o mapy i rozwidlenia.</li>
+                <li><strong>Wyselekcjonowana droga</strong> – trasa jest idealnie dobrana, spersonalizowana i sprawdzona pod szybkie, sportowe maszyny.</li>
+            </ul>
         </div>
     </section>
 
@@ -454,7 +467,6 @@
         </div>
     </section>
 
-    <!-- SEKCJA GALERII -->
     <section id="galeria" class="reveal">
         <div class="section-header">
             <h2>W obiektywie</h2>
@@ -462,47 +474,26 @@
         </div>
         
         <div class="gallery-grid">
-            <!-- Rząd 1: Wideo (6 kafelków) -->
-            <div class="gallery-item">
-                <img src="https://placehold.co/400x400/2c2c2e/86868b?text=Wideo+1" alt="Miniaturka Wideo">
-                <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://placehold.co/400x400/2c2c2e/86868b?text=Wideo+2" alt="Miniaturka Wideo">
-                <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://placehold.co/400x400/2c2c2e/86868b?text=Wideo+3" alt="Miniaturka Wideo">
-                <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://placehold.co/400x400/2c2c2e/86868b?text=Wideo+4" alt="Miniaturka Wideo">
-                <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://placehold.co/400x400/2c2c2e/86868b?text=Wideo+5" alt="Miniaturka Wideo">
-                <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://placehold.co/400x400/2c2c2e/86868b?text=Wideo+6" alt="Miniaturka Wideo">
-                <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-            </div>
+            <div class="gallery-item"><img src="DSC_0108.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><img src="DSC_0109.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><img src="DSC_0110.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><img src="DSC_0111.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><img src="DSC_0112.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><video src="IMG_3140.mp4" autoplay loop muted playsinline></video></div>
 
-            <!-- Rząd 2: Zdjęcia (6 kafelków) -->
-            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+1" alt="Auto na trasie"></div>
-            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+2" alt="Auto na trasie"></div>
-            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+3" alt="Auto na trasie"></div>
-            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+4" alt="Auto na trasie"></div>
-            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+5" alt="Auto na trasie"></div>
-            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+6" alt="Auto na trasie"></div>
+            <div class="gallery-item"><img src="DSC_0113.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><img src="DSC_0114.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><video src="IMG_4007.mp4" autoplay loop muted playsinline></video></div>
+            <div class="gallery-item"><img src="DSC_0115.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><img src="DSC_0116.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><video src="IMG_4009.mp4" autoplay loop muted playsinline></video></div>
 
-            <!-- Rząd 3: Zdjęcia (6 kafelków) -->
-            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+7" alt="Auto na trasie"></div>
-            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+8" alt="Auto na trasie"></div>
-            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+9" alt="Auto na trasie"></div>
-            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+10" alt="Auto na trasie"></div>
-            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+11" alt="Auto na trasie"></div>
-            <div class="gallery-item"><img src="https://placehold.co/400x400/2c2c2e/86868b?text=Zdjęcie+12" alt="Auto na trasie"></div>
+            <div class="gallery-item"><img src="DSC_0117.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><img src="DSC_0118.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><video src="IMG_4012.mp4" autoplay loop muted playsinline></video></div>
+            <div class="gallery-item"><img src="DSC_0119.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><img src="DSC_0123.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><video src="IMG_4013.mp4" autoplay loop muted playsinline></video></div>
         </div>
     </section>
 
