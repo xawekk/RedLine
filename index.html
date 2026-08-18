@@ -238,7 +238,6 @@
             margin: 0 auto;
         }
 
-        /* Usunięty kursor (link) z przycisków, zmienione na tagi tekstowe */
         .car-pill {
             background-color: var(--surface-color);
             color: var(--text-primary);
@@ -249,7 +248,7 @@
             font-weight: 500;
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: var(--transition);
-            cursor: default; /* Kursor bez łapki (brak linku) */
+            cursor: default; 
         }
 
         .car-pill.dodge:hover { background-color: #8E9492; color: #000000; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(142, 148, 146, 0.3); }
@@ -262,6 +261,7 @@
         .car-pill.s3:hover { background-color: #87CEEB; color: #000000; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(135, 206, 235, 0.3); }
         .car-pill.m440i:hover { background-color: #212020; color: #ffffff; border-color: #444; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1); }
         .car-pill.rs3-sport:hover { background-color: #686A6C; color: #ffffff; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(104, 106, 108, 0.3); }
+        .car-pill.rs3-hatchback:hover { background-color: #686A6C; color: #ffffff; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(104, 106, 108, 0.3); }
         .car-pill.a5:hover { background-color: #81D8D0; color: #000000; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(129, 216, 208, 0.3); }
 
         .gallery-grid {
@@ -280,22 +280,21 @@
             cursor: pointer;
         }
 
-        .gallery-item img, 
-        .gallery-item video {
+        .gallery-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: var(--transition);
         }
 
-        .gallery-item:hover img,
-        .gallery-item:hover video {
+        .gallery-item:hover img {
             transform: scale(1.05);
         }
 
-        /* --- STYLIZACJA PEŁNOEKRANOWEJ GALERII (LIGHTBOX) --- */
+        /* --- STYLIZACJA PŁYNNEGO LIGHTBOXA --- */
         .lightbox {
-            display: none;
+            visibility: hidden;
+            opacity: 0;
             position: fixed;
             z-index: 9999;
             left: 0;
@@ -304,12 +303,15 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(8px);
+            display: flex;
             align-items: center;
             justify-content: center;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
         }
 
         .lightbox.active {
-            display: flex;
+            visibility: visible;
+            opacity: 1;
         }
 
         .lightbox-media-container {
@@ -320,13 +322,19 @@
             align-items: center;
         }
 
-        .lightbox-media-container img, 
-        .lightbox-media-container video {
+        /* Płynne ładowanie zdjęć z efektem zoom-in */
+        @keyframes fadeInScale {
+            from { opacity: 0.3; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .lightbox-media-container img {
             max-width: 100%;
             max-height: 85vh;
             border-radius: 8px;
             box-shadow: 0 0 30px rgba(255, 0, 0, 0.15);
             object-fit: contain;
+            animation: fadeInScale 0.35s ease forwards;
         }
 
         .lightbox-close {
@@ -339,6 +347,7 @@
             cursor: pointer;
             transition: var(--transition);
             line-height: 1;
+            z-index: 10000;
         }
 
         .lightbox-close:hover {
@@ -362,6 +371,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 10000;
         }
 
         .lightbox-prev:hover, .lightbox-next:hover {
@@ -533,11 +543,9 @@
     <section id="uczestnicy" class="reveal">
         <div class="section-header">
             <h2>Jeździli z nami</h2>
-            <!-- Opis zmieniony, ponieważ nie ma już klikania -->
             <p>Maszyny, które do tej pory pokonywały z nami dolnośląskie winkle.</p>
         </div>
         <div class="cars-list">
-            <!-- Tagi <span> zamiast linków <a> -->
             <span class="car-pill dodge">Dodge Challenger</span>
             <span class="car-pill m4">BMW M4</span>
             <span class="car-pill a45s">Mercedes Benz A45S AMG</span>
@@ -548,6 +556,7 @@
             <span class="car-pill s3">Audi S3 450HP</span>
             <span class="car-pill m440i">BMW M440i</span>
             <span class="car-pill rs3-sport">Audi RS3 Sportback</span>
+            <span class="car-pill rs3-hatchback">Audi RS3 hatchback</span>
             <span class="car-pill a5">Audi A5</span>
         </div>
     </section>
@@ -558,28 +567,20 @@
             <p>Zobacz ujęcia z naszych poprzednich przejazdów po Dolnym Śląsku. Kliknij zdjęcie, aby powiększyć.</p>
         </div>
         
-        <!-- Galeria przygotowana pod Lightbox -->
+        <!-- Galeria z dokładnie 12 zdjęciami (usunięte DSC_0123) -->
         <div class="gallery-grid">
             <div class="gallery-item"><img src="DSC_0108.jpg" alt="RedLine Event Auto"></div>
             <div class="gallery-item"><img src="DSC_0109.jpg" alt="RedLine Event Auto"></div>
             <div class="gallery-item"><img src="DSC_0110.jpg" alt="RedLine Event Auto"></div>
             <div class="gallery-item"><img src="DSC_0111.jpg" alt="RedLine Event Auto"></div>
             <div class="gallery-item"><img src="DSC_0112.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><video src="IMG_3140.mp4" autoplay loop muted playsinline></video></div>
-
             <div class="gallery-item"><img src="DSC_0113.jpg" alt="RedLine Event Auto"></div>
             <div class="gallery-item"><img src="DSC_0114.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><video src="IMG_4007.mp4" autoplay loop muted playsinline></video></div>
             <div class="gallery-item"><img src="DSC_0115.jpg" alt="RedLine Event Auto"></div>
             <div class="gallery-item"><img src="DSC_0116.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><video src="IMG_4009.mp4" autoplay loop muted playsinline></video></div>
-
             <div class="gallery-item"><img src="DSC_0117.jpg" alt="RedLine Event Auto"></div>
             <div class="gallery-item"><img src="DSC_0118.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><video src="IMG_4012.mp4" autoplay loop muted playsinline></video></div>
             <div class="gallery-item"><img src="DSC_0119.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="DSC_0123.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><video src="IMG_4013.mp4" autoplay loop muted playsinline></video></div>
         </div>
     </section>
 
@@ -630,7 +631,7 @@
         <p>&copy; 2026 RedLine cars event. Stworzone z pasją do motoryzacji.</p>
     </footer>
 
-    <!-- STRUKTURA LIGHTBOXA DLA GALERII -->
+    <!-- PŁYNNY LIGHTBOX -->
     <div id="lightbox" class="lightbox">
         <span class="lightbox-close">&times;</span>
         <button class="lightbox-prev">&#10094;</button>
@@ -640,8 +641,8 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // Animacje przy scrollowaniu
             const reveals = document.querySelectorAll(".reveal");
+
             const revealOnScroll = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -649,15 +650,19 @@
                         observer.unobserve(entry.target); 
                     }
                 });
-            }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
+            }, {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            });
 
-            reveals.forEach(reveal => revealOnScroll.observe(reveal));
+            reveals.forEach(reveal => {
+                revealOnScroll.observe(reveal);
+            });
             
             setTimeout(() => {
                 document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('active'));
             }, 100);
 
-            // Logika losowych aut w formularzu
             const carModels = [
                 "BMW M4 Competition xDrive", "Audi RS6 Avant", "Mercedes-AMG E 63 S", 
                 "BMW M5 Competition", "Audi RS7 Sportback", "Mercedes-AMG GT 63 S 4-Door Coupe", 
@@ -675,9 +680,12 @@
             
             const randomCar = carModels[Math.floor(Math.random() * carModels.length)];
             const carInput = document.getElementById("car");
-            if(carInput) carInput.placeholder = "np. " + randomCar;
+            
+            if(carInput) {
+                carInput.placeholder = "np. " + randomCar;
+            }
 
-            // ---- LOGIKA LIGHTBOXA (GALERII) ----
+            // ---- LOGIKA PŁYNNEGO LIGHTBOXA ----
             const galleryItems = document.querySelectorAll('.gallery-item');
             const lightbox = document.getElementById('lightbox');
             const lightboxContainer = document.querySelector('.lightbox-media-container');
@@ -686,29 +694,20 @@
             const nextBtn = document.querySelector('.lightbox-next');
             
             let currentIndex = 0;
-            // Zbieramy media ze wszystkich kafelków
             const mediaElements = Array.from(galleryItems).map(item => item.firstElementChild);
 
             function updateLightbox() {
                 lightboxContainer.innerHTML = '';
                 const mediaNode = mediaElements[currentIndex].cloneNode(true);
-                
-                // Jeśli to wideo, dodajemy kontrolki by można było odtworzyć z dźwiękiem w powiększeniu
-                if(mediaNode.tagName === 'VIDEO') {
-                    mediaNode.setAttribute('controls', 'true');
-                    mediaNode.muted = false; // Odciszamy film w pełnym ekranie
-                }
-                
                 lightboxContainer.appendChild(mediaNode);
             }
 
-            // Otwieranie kliknięciem
             galleryItems.forEach((item, index) => {
                 item.addEventListener('click', () => {
                     currentIndex = index;
                     updateLightbox();
                     lightbox.classList.add('active');
-                    document.body.style.overflow = 'hidden'; // Blokuje przewijanie strony pod spodem
+                    document.body.style.overflow = 'hidden'; 
                 });
             });
 
@@ -722,27 +721,27 @@
                 updateLightbox();
             }
 
-            // Zamknięcie krzyżykiem
             closeBtn.addEventListener('click', () => {
                 lightbox.classList.remove('active');
-                lightboxContainer.innerHTML = ''; 
-                document.body.style.overflow = 'auto'; // Przywraca przewijanie
+                setTimeout(() => {
+                    lightboxContainer.innerHTML = ''; 
+                }, 400); // Czyścimy pojemnik po zakończeniu animacji (0.4s)
+                document.body.style.overflow = 'auto'; 
             });
 
-            // Przewijanie przyciskami ekranowymi
             nextBtn.addEventListener('click', showNext);
             prevBtn.addEventListener('click', showPrev);
 
-            // Zamykanie kliknięciem w tło (poza zdjęciem)
             lightbox.addEventListener('click', (e) => {
-                if(e.target === lightbox) {
+                if(e.target === lightbox || e.target === lightboxContainer) {
                     lightbox.classList.remove('active');
-                    lightboxContainer.innerHTML = '';
+                    setTimeout(() => {
+                        lightboxContainer.innerHTML = '';
+                    }, 400);
                     document.body.style.overflow = 'auto';
                 }
             });
 
-            // Obsługa klawiatury (strzałki i Escape)
             document.addEventListener('keydown', (e) => {
                 if(!lightbox.classList.contains('active')) return;
                 
@@ -750,7 +749,9 @@
                 if(e.key === 'ArrowLeft') showPrev();
                 if(e.key === 'Escape') {
                     lightbox.classList.remove('active');
-                    lightboxContainer.innerHTML = '';
+                    setTimeout(() => {
+                        lightboxContainer.innerHTML = '';
+                    }, 400);
                     document.body.style.overflow = 'auto';
                 }
             });
