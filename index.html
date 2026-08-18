@@ -261,8 +261,9 @@
         .car-pill.s3:hover { background-color: #87CEEB; color: #000000; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(135, 206, 235, 0.3); }
         .car-pill.m440i:hover { background-color: #212020; color: #ffffff; border-color: #444; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1); }
         .car-pill.rs3-sport:hover { background-color: #686A6C; color: #ffffff; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(104, 106, 108, 0.3); }
-        .car-pill.rs3-hatchback:hover { background-color: #686A6C; color: #ffffff; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(104, 106, 108, 0.3); }
         .car-pill.a5:hover { background-color: #81D8D0; color: #000000; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(129, 216, 208, 0.3); }
+        /* Dodane M4 Cabrio - białe podświetlenie */
+        .car-pill.m4-cabrio:hover { background-color: #ffffff; color: #000000; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(255, 255, 255, 0.4); }
 
         .gallery-grid {
             display: grid;
@@ -322,7 +323,6 @@
             align-items: center;
         }
 
-        /* Płynne ładowanie zdjęć z efektem zoom-in */
         @keyframes fadeInScale {
             from { opacity: 0.3; transform: scale(0.96); }
             to { opacity: 1; transform: scale(1); }
@@ -548,6 +548,7 @@
         <div class="cars-list">
             <span class="car-pill dodge">Dodge Challenger</span>
             <span class="car-pill m4">BMW M4</span>
+            <span class="car-pill m4-cabrio">BMW M4 Cabrio</span>
             <span class="car-pill a45s">Mercedes Benz A45S AMG</span>
             <span class="car-pill s4">Audi S4</span>
             <span class="car-pill rs3-limo">Audi RS3 Limousine</span>
@@ -556,7 +557,6 @@
             <span class="car-pill s3">Audi S3 450HP</span>
             <span class="car-pill m440i">BMW M440i</span>
             <span class="car-pill rs3-sport">Audi RS3 Sportback</span>
-            <span class="car-pill rs3-hatchback">Audi RS3 hatchback</span>
             <span class="car-pill a5">Audi A5</span>
         </div>
     </section>
@@ -567,20 +567,21 @@
             <p>Zobacz ujęcia z naszych poprzednich przejazdów po Dolnym Śląsku. Kliknij zdjęcie, aby powiększyć.</p>
         </div>
         
-        <!-- Galeria z dokładnie 12 zdjęciami (usunięte DSC_0123) -->
+        <!-- Galeria na podstawie nowego zrzutu ekranu (12 zdjęć) -->
         <div class="gallery-grid">
+            <div class="gallery-item"><img src="IMG_4579.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><img src="Rs3.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><img src="IMG_8200.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><img src="DSC_0178.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><img src="IMG_4580.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><img src="IMG_4581.jpg" alt="RedLine Event Auto"></div>
+            
+            <div class="gallery-item"><img src="BMW M4-13.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><img src="RSQ8MTM-12.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><img src="DSC_0112.jpg" alt="RedLine Event Auto"></div>
             <div class="gallery-item"><img src="DSC_0108.jpg" alt="RedLine Event Auto"></div>
             <div class="gallery-item"><img src="DSC_0109.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="DSC_0110.jpg" alt="RedLine Event Auto"></div>
             <div class="gallery-item"><img src="DSC_0111.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="DSC_0112.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="DSC_0113.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="DSC_0114.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="DSC_0115.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="DSC_0116.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="DSC_0117.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="DSC_0118.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="DSC_0119.jpg" alt="RedLine Event Auto"></div>
         </div>
     </section>
 
@@ -725,7 +726,7 @@
                 lightbox.classList.remove('active');
                 setTimeout(() => {
                     lightboxContainer.innerHTML = ''; 
-                }, 400); // Czyścimy pojemnik po zakończeniu animacji (0.4s)
+                }, 400); 
                 document.body.style.overflow = 'auto'; 
             });
 
