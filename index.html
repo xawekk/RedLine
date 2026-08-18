@@ -238,6 +238,7 @@
             margin: 0 auto;
         }
 
+        /* Usunięty kursor (link) z przycisków, zmienione na tagi tekstowe */
         .car-pill {
             background-color: var(--surface-color);
             color: var(--text-primary);
@@ -248,7 +249,7 @@
             font-weight: 500;
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: var(--transition);
-            cursor: pointer;
+            cursor: default; /* Kursor bez łapki (brak linku) */
         }
 
         .car-pill.dodge:hover { background-color: #8E9492; color: #000000; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(142, 148, 146, 0.3); }
@@ -291,6 +292,85 @@
         .gallery-item:hover video {
             transform: scale(1.05);
         }
+
+        /* --- STYLIZACJA PEŁNOEKRANOWEJ GALERII (LIGHTBOX) --- */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-media-container {
+            max-width: 85%;
+            max-height: 85vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox-media-container img, 
+        .lightbox-media-container video {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.15);
+            object-fit: contain;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            line-height: 1;
+        }
+
+        .lightbox-close:hover {
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        .lightbox-prev, .lightbox-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(20, 20, 20, 0.7);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 24px;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-prev:hover, .lightbox-next:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .lightbox-prev { left: 30px; }
+        .lightbox-next { right: 30px; }
 
         .form-container {
             max-width: 600px;
@@ -394,6 +474,10 @@
             section { padding: 60px 20px; }
             .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             .car-pill { padding: 10px 18px; font-size: 0.9rem; }
+            .lightbox-prev { left: 10px; width: 45px; height: 45px; font-size: 20px; }
+            .lightbox-next { right: 10px; width: 45px; height: 45px; font-size: 20px; }
+            .lightbox-close { top: 15px; right: 20px; }
+            .lightbox-media-container { max-width: 100%; padding: 0 10px; }
         }
     </style>
 </head>
@@ -418,7 +502,6 @@
                 <p>M, RS, AMG. Z nami jeździli już właściciele takich maszyn jak Dodge Challenger, BMW M4, Audi RS Q8 MTM czy Mercedes-AMG A 45 S. Czas na Ciebie.</p>
             </div>
             
-            <!-- NOWA SEKCJA TRASY BEZ LINKU DO MAPY -->
             <div class="card reveal">
                 <h3>Trasa II Edycji</h3>
                 <p>195 km czystej frajdy zaplanowane na <strong>29 sierpnia 2026</strong>. Zaczynamy z tajnej pinezki, przecinamy najlepsze winkle Karkonoszy – Świeradów-Zdrój, Szklarską Porębę i Karpacz, mocno zahaczając o czeską stronę. Równe 4 godziny jazdy, 8 pitstopów i meta na zasłużony posiłek w Restauracji Goduszyn.</p>
@@ -450,29 +533,32 @@
     <section id="uczestnicy" class="reveal">
         <div class="section-header">
             <h2>Jeździli z nami</h2>
-            <p>Maszyny, które do tej pory pokonywały z nami dolnośląskie winkle. Kliknij nazwę, by zobaczyć zdjęcie.</p>
+            <!-- Opis zmieniony, ponieważ nie ma już klikania -->
+            <p>Maszyny, które do tej pory pokonywały z nami dolnośląskie winkle.</p>
         </div>
         <div class="cars-list">
-            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=Dodge+Challenger" target="_blank" class="car-pill dodge">Dodge Challenger</a>
-            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=BMW+M4" target="_blank" class="car-pill m4">BMW M4</a>
-            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=Mercedes+Benz+A45S+AMG" target="_blank" class="car-pill a45s">Mercedes Benz A45S AMG</a>
-            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=Audi+S4" target="_blank" class="car-pill s4">Audi S4</a>
-            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=Audi+RS3+Limousine" target="_blank" class="car-pill rs3-limo">Audi RS3 Limousine</a>
-            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=Audi+RS+Q8+MTM" target="_blank" class="car-pill rsq8">Audi RS Q8 MTM</a>
-            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=Infiniti+Q60" target="_blank" class="car-pill q60">Infiniti Q60</a>
-            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=Audi+S3+450HP" target="_blank" class="car-pill s3">Audi S3 450HP</a>
-            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=BMW+M440i" target="_blank" class="car-pill m440i">BMW M440i</a>
-            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=Audi+RS3+Sportback" target="_blank" class="car-pill rs3-sport">Audi RS3 Sportback</a>
-            <a href="https://placehold.co/800x600/2c2c2e/86868b?text=Audi+A5" target="_blank" class="car-pill a5">Audi A5</a>
+            <!-- Tagi <span> zamiast linków <a> -->
+            <span class="car-pill dodge">Dodge Challenger</span>
+            <span class="car-pill m4">BMW M4</span>
+            <span class="car-pill a45s">Mercedes Benz A45S AMG</span>
+            <span class="car-pill s4">Audi S4</span>
+            <span class="car-pill rs3-limo">Audi RS3 Limousine</span>
+            <span class="car-pill rsq8">Audi RS Q8 MTM</span>
+            <span class="car-pill q60">Infiniti Q60</span>
+            <span class="car-pill s3">Audi S3 450HP</span>
+            <span class="car-pill m440i">BMW M440i</span>
+            <span class="car-pill rs3-sport">Audi RS3 Sportback</span>
+            <span class="car-pill a5">Audi A5</span>
         </div>
     </section>
 
     <section id="galeria" class="reveal">
         <div class="section-header">
             <h2>W obiektywie</h2>
-            <p>Zobacz ujęcia z naszych poprzednich przejazdów po Dolnym Śląsku.</p>
+            <p>Zobacz ujęcia z naszych poprzednich przejazdów po Dolnym Śląsku. Kliknij zdjęcie, aby powiększyć.</p>
         </div>
         
+        <!-- Galeria przygotowana pod Lightbox -->
         <div class="gallery-grid">
             <div class="gallery-item"><img src="DSC_0108.jpg" alt="RedLine Event Auto"></div>
             <div class="gallery-item"><img src="DSC_0109.jpg" alt="RedLine Event Auto"></div>
@@ -544,10 +630,18 @@
         <p>&copy; 2026 RedLine cars event. Stworzone z pasją do motoryzacji.</p>
     </footer>
 
+    <!-- STRUKTURA LIGHTBOXA DLA GALERII -->
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <button class="lightbox-prev">&#10094;</button>
+        <div class="lightbox-media-container"></div>
+        <button class="lightbox-next">&#10095;</button>
+    </div>
+
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            // Animacje przy scrollowaniu
             const reveals = document.querySelectorAll(".reveal");
-
             const revealOnScroll = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -555,19 +649,15 @@
                         observer.unobserve(entry.target); 
                     }
                 });
-            }, {
-                threshold: 0.15,
-                rootMargin: "0px 0px -50px 0px"
-            });
+            }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
 
-            reveals.forEach(reveal => {
-                revealOnScroll.observe(reveal);
-            });
+            reveals.forEach(reveal => revealOnScroll.observe(reveal));
             
             setTimeout(() => {
                 document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('active'));
             }, 100);
 
+            // Logika losowych aut w formularzu
             const carModels = [
                 "BMW M4 Competition xDrive", "Audi RS6 Avant", "Mercedes-AMG E 63 S", 
                 "BMW M5 Competition", "Audi RS7 Sportback", "Mercedes-AMG GT 63 S 4-Door Coupe", 
@@ -585,10 +675,85 @@
             
             const randomCar = carModels[Math.floor(Math.random() * carModels.length)];
             const carInput = document.getElementById("car");
+            if(carInput) carInput.placeholder = "np. " + randomCar;
+
+            // ---- LOGIKA LIGHTBOXA (GALERII) ----
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxContainer = document.querySelector('.lightbox-media-container');
+            const closeBtn = document.querySelector('.lightbox-close');
+            const prevBtn = document.querySelector('.lightbox-prev');
+            const nextBtn = document.querySelector('.lightbox-next');
             
-            if(carInput) {
-                carInput.placeholder = "np. " + randomCar;
+            let currentIndex = 0;
+            // Zbieramy media ze wszystkich kafelków
+            const mediaElements = Array.from(galleryItems).map(item => item.firstElementChild);
+
+            function updateLightbox() {
+                lightboxContainer.innerHTML = '';
+                const mediaNode = mediaElements[currentIndex].cloneNode(true);
+                
+                // Jeśli to wideo, dodajemy kontrolki by można było odtworzyć z dźwiękiem w powiększeniu
+                if(mediaNode.tagName === 'VIDEO') {
+                    mediaNode.setAttribute('controls', 'true');
+                    mediaNode.muted = false; // Odciszamy film w pełnym ekranie
+                }
+                
+                lightboxContainer.appendChild(mediaNode);
             }
+
+            // Otwieranie kliknięciem
+            galleryItems.forEach((item, index) => {
+                item.addEventListener('click', () => {
+                    currentIndex = index;
+                    updateLightbox();
+                    lightbox.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Blokuje przewijanie strony pod spodem
+                });
+            });
+
+            function showNext() {
+                currentIndex = (currentIndex + 1) % mediaElements.length;
+                updateLightbox();
+            }
+
+            function showPrev() {
+                currentIndex = (currentIndex - 1 + mediaElements.length) % mediaElements.length;
+                updateLightbox();
+            }
+
+            // Zamknięcie krzyżykiem
+            closeBtn.addEventListener('click', () => {
+                lightbox.classList.remove('active');
+                lightboxContainer.innerHTML = ''; 
+                document.body.style.overflow = 'auto'; // Przywraca przewijanie
+            });
+
+            // Przewijanie przyciskami ekranowymi
+            nextBtn.addEventListener('click', showNext);
+            prevBtn.addEventListener('click', showPrev);
+
+            // Zamykanie kliknięciem w tło (poza zdjęciem)
+            lightbox.addEventListener('click', (e) => {
+                if(e.target === lightbox) {
+                    lightbox.classList.remove('active');
+                    lightboxContainer.innerHTML = '';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+
+            // Obsługa klawiatury (strzałki i Escape)
+            document.addEventListener('keydown', (e) => {
+                if(!lightbox.classList.contains('active')) return;
+                
+                if(e.key === 'ArrowRight') showNext();
+                if(e.key === 'ArrowLeft') showPrev();
+                if(e.key === 'Escape') {
+                    lightbox.classList.remove('active');
+                    lightboxContainer.innerHTML = '';
+                    document.body.style.overflow = 'auto';
+                }
+            });
         });
     </script>
 </body>
