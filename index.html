@@ -4,22 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RedLine cars event | Wyjazdy Samochodowe na Dolnym Śląsku</title>
-    <!-- Agresywny font Russo One dla nagłówków oraz Inter do czytania tekstów -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Russo+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        /* Zmienne CSS - RedLine Dark Style */
         :root {
-            --bg-color: #000000;
-            --surface-color: #0a0a0a;
-            --surface-hover: #141414;
-            --text-primary: #ffffff;
-            --text-secondary: #86868b;
+            --bg-color: #121110;
+            --surface-color: #1A1918;
+            --surface-hover: #222120;
+            --text-primary: #F4F0EA;
+            --text-secondary: #9E9990;
+            --accent-color: #C5A880;
+            --accent-glow: rgba(197, 168, 128, 0.15);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --border-radius-large: 24px;
+            --border-radius-small: 12px;
+            --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body.sport-mode {
+            --bg-color: #080808;
+            --surface-color: #121212;
+            --surface-hover: #1a1a1a;
+            --text-primary: #FFFFFF;
+            --text-secondary: #888888;
             --accent-color: #FF0000;
-            --accent-text: #ffffff;
-            --border-radius-large: 16px; 
-            --border-radius-small: 8px;
-            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --accent-glow: rgba(255, 0, 0, 0.25);
+            --border-color: rgba(255, 0, 0, 0.2);
         }
 
         * {
@@ -32,147 +42,241 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-primary);
-            line-height: 1.6;
+            line-height: 1.7;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            transition: background-color 0.6s ease, color 0.6s ease;
         }
 
-        h1, h2, h3, .price-tag {
-            font-family: 'Russo One', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        h1, h2, h3, .price-tag, .discount-code {
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: -0.02em;
+            font-weight: 600;
         }
 
         .reveal {
             opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(35px);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
         }
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
         }
 
+        .nav-bar {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px;
+            background: rgba(18, 17, 16, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        body.sport-mode .nav-bar {
+            background: rgba(8, 8, 8, 0.85);
+        }
+
+        .nav-brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .mode-toggle-btn {
+            background: var(--surface-color);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 980px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .mode-toggle-btn:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-1px);
+        }
+
+        .mode-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-color);
+            transition: var(--transition);
+        }
+
         .hero {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 0 20px;
-            background: radial-gradient(circle at center, #1a0000 0%, #000000 100%);
+            padding: 140px 24px 80px 24px;
+            background: radial-gradient(circle at center top, var(--accent-glow) 0%, transparent 70%);
+            position: relative;
         }
 
         .hero-logo {
-            max-width: 350px;
+            max-width: 260px;
             width: 100%;
-            margin-bottom: 30px;
-            mix-blend-mode: lighten;
+            margin-bottom: 40px;
+            filter: grayscale(100%) brightness(1.2) contrast(1.1);
+            opacity: 0.9;
+            transition: var(--transition);
+        }
+
+        body.sport-mode .hero-logo {
+            filter: none;
+            opacity: 1;
+            filter: drop-shadow(0 0 25px rgba(255, 0, 0, 0.3));
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            margin-bottom: 20px;
-            line-height: 1.2;
-            max-width: 1000px;
+            font-size: clamp(3rem, 6.5vw, 5.5rem);
+            margin-bottom: 24px;
+            line-height: 1.05;
+            max-width: 950px;
+            font-weight: 400;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--accent-color);
         }
 
         .hero p {
-            font-size: clamp(1.2rem, 2vw, 1.5rem);
+            font-size: clamp(1.1rem, 1.8vw, 1.3rem);
             color: var(--text-secondary);
-            max-width: 950px;
-            margin-bottom: 40px;
+            max-width: 700px;
+            margin-bottom: 48px;
+            font-weight: 300;
         }
 
         .btn-primary {
             display: inline-block;
             background-color: var(--accent-color);
-            color: var(--accent-text);
-            padding: 16px 40px;
+            color: #121110;
+            padding: 16px 42px;
             border-radius: 980px;
-            font-family: 'Russo One', sans-serif;
-            font-size: 1.1rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 0.12em;
             text-decoration: none;
             transition: var(--transition);
             cursor: pointer;
             border: none;
+            font-weight: 600;
+            box-shadow: 0 10px 30px var(--accent-glow);
+        }
+
+        body.sport-mode .btn-primary {
+            color: #ffffff;
         }
 
         .btn-primary:hover {
-            transform: scale(1.05);
-            background-color: #cc0000;
-            box-shadow: 0 10px 25px rgba(255, 0, 0, 0.4);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 16px 35px var(--accent-glow);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0) scale(0.98);
         }
 
         section {
-            padding: 100px 20px;
-            max-width: 1200px;
+            padding: 120px 24px;
+            max-width: 1280px;
             margin: 0 auto;
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 70px;
         }
 
         .section-header h2 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            color: var(--accent-color);
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            margin-bottom: 16px;
+            font-weight: 400;
         }
 
         .section-header p {
             color: var(--text-secondary);
-            font-size: 1.2rem;
+            font-size: 1.15rem;
+            font-weight: 300;
+            max-width: 650px;
+            margin: 0 auto;
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 32px;
         }
 
         .card {
             background-color: var(--surface-color);
             border-radius: var(--border-radius-large);
-            padding: 40px;
+            padding: 50px 40px;
             transition: var(--transition);
-            border: 1px solid rgba(255, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
         }
 
         .card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-6px);
             background-color: var(--surface-hover);
-            border-color: rgba(255, 0, 0, 0.3);
+            border-color: var(--accent-color);
+            box-shadow: 0 24px 50px rgba(0, 0, 0, 0.4), 0 0 30px var(--accent-glow);
         }
 
         .card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: #fff;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 400;
         }
 
         .card p, .card ul {
             color: var(--text-secondary);
             font-size: 1.05rem;
+            font-weight: 300;
+            line-height: 1.7;
         }
         
         .card ul {
             list-style-type: none;
-            margin-top: 15px;
+            margin-top: 18px;
         }
 
         .card ul li {
-            margin-bottom: 8px;
-            padding-left: 20px;
+            margin-bottom: 10px;
+            padding-left: 22px;
             position: relative;
         }
 
         .card ul li::before {
-            content: '•';
+            content: '—';
             position: absolute;
             left: 0;
             color: var(--accent-color);
@@ -182,36 +286,46 @@
             text-align: center;
             background-color: var(--surface-color);
             border-radius: var(--border-radius-large);
-            padding: 60px 40px;
-            margin-bottom: 0px; 
-            border: 1px solid rgba(255, 0, 0, 0.1);
+            padding: 80px 48px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .pricing:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 24px 50px rgba(0, 0, 0, 0.4), 0 0 30px var(--accent-glow);
+            transform: translateY(-3px);
         }
 
         .pricing h2 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            color: #fff;
+            font-size: 3.2rem;
+            margin-bottom: 12px;
+            font-weight: 400;
         }
         
         .pricing .price-tag {
-            font-size: 4.5rem;
-            margin: 10px 0;
+            font-size: 5rem;
+            margin: 20px 0;
             color: var(--accent-color);
-            text-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            text-shadow: 0 0 40px var(--accent-glow);
         }
 
         .pricing-features {
             text-align: left;
-            max-width: 600px;
-            margin: 30px auto 0 auto;
+            max-width: 640px;
+            margin: 45px auto 0 auto;
             list-style: none;
-            color: var(--text-primary);
+            color: var(--text-secondary);
             font-size: 1.1rem;
+            font-weight: 300;
         }
 
         .pricing-features li {
-            margin-bottom: 15px;
-            padding-left: 35px;
+            margin-bottom: 20px;
+            padding-left: 40px;
             position: relative;
         }
 
@@ -219,56 +333,102 @@
             content: '✓';
             position: absolute;
             left: 0;
+            top: 1px;
             color: var(--accent-color);
-            font-weight: bold;
+            font-weight: 700;
             font-size: 1.2rem;
         }
 
         .pricing-features strong {
-            color: #fff;
-            font-weight: 600;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .partner-section {
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius-large);
+            padding: 60px 48px;
+            margin-top: 36px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .partner-section:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 24px 50px rgba(0, 0, 0, 0.4), 0 0 30px var(--accent-glow);
+            transform: translateY(-3px);
+        }
+
+        .partner-section h3 {
+            font-size: 2.2rem;
+            margin-bottom: 16px;
+            font-weight: 400;
+        }
+
+        .partner-section p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 32px;
+            max-width: 750px;
+            margin-inline: auto;
+            font-weight: 300;
+        }
+
+        .discount-code {
+            display: inline-block;
+            background-color: var(--accent-glow);
+            color: var(--accent-color);
+            border: 1px dashed var(--accent-color);
+            padding: 16px 36px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            border-radius: var(--border-radius-small);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 28px;
+            transition: var(--transition);
+        }
+
+        .discount-code:hover {
+            transform: scale(1.03);
         }
 
         .cars-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 14px;
             justify-content: center;
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
         .car-pill {
             background-color: var(--surface-color);
-            color: var(--text-primary);
-            padding: 12px 24px;
+            color: var(--text-secondary);
+            padding: 14px 28px;
             border-radius: 980px;
             text-decoration: none;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 500;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
             transition: var(--transition);
-            cursor: default; 
+            cursor: default;
         }
 
-        .car-pill.dodge:hover { background-color: #8E9492; color: #000000; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(142, 148, 146, 0.3); }
-        .car-pill.m4:hover { background-color: #E60000; color: #ffffff; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(230, 0, 0, 0.3); }
-        .car-pill.a45s:hover { background-color: #565F64; color: #ffffff; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(86, 95, 100, 0.3); }
-        .car-pill.s4:hover { background-color: #808080; color: #ffffff; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(128, 128, 128, 0.3); }
-        .car-pill.rs3-limo:hover { background-color: #686A6C; color: #ffffff; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(104, 106, 108, 0.3); }
-        .car-pill.rsq8:hover { background-color: #686A6C; color: #ffffff; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(104, 106, 108, 0.3); }
-        .car-pill.q60:hover { background-color: #001F3F; color: #ffffff; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0, 31, 63, 0.4); }
-        .car-pill.s3:hover { background-color: #87CEEB; color: #000000; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(135, 206, 235, 0.3); }
-        .car-pill.m440i:hover { background-color: #212020; color: #ffffff; border-color: #444; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1); }
-        .car-pill.rs3-sport:hover { background-color: #686A6C; color: #ffffff; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(104, 106, 108, 0.3); }
-        .car-pill.a5:hover { background-color: #81D8D0; color: #000000; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(129, 216, 208, 0.3); }
-        /* Dodane M4 Cabrio - białe podświetlenie */
-        .car-pill.m4-cabrio:hover { background-color: #ffffff; color: #000000; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(255, 255, 255, 0.4); }
+        .car-pill:hover {
+            transform: translateY(-3px);
+            background-color: var(--surface-hover);
+            color: var(--text-primary);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 25px var(--accent-glow);
+        }
 
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 16px;
+            gap: 18px;
         }
 
         .gallery-item {
@@ -277,8 +437,15 @@
             border-radius: var(--border-radius-small);
             overflow: hidden;
             background-color: var(--surface-hover);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
             cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-glow);
+            transform: translateY(-4px);
         }
 
         .gallery-item img {
@@ -286,13 +453,14 @@
             height: 100%;
             object-fit: cover;
             transition: var(--transition);
+            filter: brightness(0.92);
         }
 
         .gallery-item:hover img {
-            transform: scale(1.05);
+            transform: scale(1.06);
+            filter: brightness(1.02);
         }
 
-        /* --- STYLIZACJA PŁYNNEGO LIGHTBOXA --- */
         .lightbox {
             visibility: hidden;
             opacity: 0;
@@ -302,12 +470,16 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(8px);
+            background-color: rgba(18, 17, 16, 0.94);
+            backdrop-filter: blur(20px);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
+            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body.sport-mode .lightbox {
+            background-color: rgba(8, 8, 8, 0.96);
         }
 
         .lightbox.active {
@@ -324,26 +496,26 @@
         }
 
         @keyframes fadeInScale {
-            from { opacity: 0.3; transform: scale(0.96); }
+            from { opacity: 0; transform: scale(0.97); }
             to { opacity: 1; transform: scale(1); }
         }
 
         .lightbox-media-container img {
             max-width: 100%;
             max-height: 85vh;
-            border-radius: 8px;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.15);
+            border-radius: var(--border-radius-small);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
             object-fit: contain;
-            animation: fadeInScale 0.35s ease forwards;
+            animation: fadeInScale 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .lightbox-close {
             position: absolute;
-            top: 25px;
-            right: 35px;
-            color: #fff;
-            font-size: 40px;
-            font-weight: bold;
+            top: 35px;
+            right: 45px;
+            color: var(--text-secondary);
+            font-size: 42px;
+            font-weight: 300;
             cursor: pointer;
             transition: var(--transition);
             line-height: 1;
@@ -351,7 +523,7 @@
         }
 
         .lightbox-close:hover {
-            color: var(--accent-color);
+            color: var(--text-primary);
             transform: scale(1.1);
         }
 
@@ -359,10 +531,10 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(20, 20, 20, 0.7);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.1);
-            font-size: 24px;
+            background: var(--surface-color);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            font-size: 20px;
             width: 60px;
             height: 60px;
             cursor: pointer;
@@ -375,127 +547,165 @@
         }
 
         .lightbox-prev:hover, .lightbox-next:hover {
-            background: var(--accent-color);
+            background: var(--surface-hover);
             border-color: var(--accent-color);
+            transform: translateY(-50%) scale(1.05);
         }
 
-        .lightbox-prev { left: 30px; }
-        .lightbox-next { right: 30px; }
+        .lightbox-prev { left: 40px; }
+        .lightbox-next { right: 40px; }
 
         .form-container {
-            max-width: 600px;
+            max-width: 660px;
             margin: 0 auto;
             background-color: var(--surface-color);
-            padding: 50px;
+            padding: 60px;
             border-radius: var(--border-radius-large);
-            border: 1px solid rgba(255, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .form-container:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 24px 50px rgba(0, 0, 0, 0.4), 0 0 30px var(--accent-glow);
         }
 
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 26px;
             text-align: left;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             font-weight: 500;
             color: var(--text-secondary);
+            font-size: 0.95rem;
+            transition: var(--transition);
+            letter-spacing: 0.02em;
         }
 
         .form-group input[type="text"],
         .form-group input[type="tel"],
         .form-group input[type="file"] {
             width: 100%;
-            padding: 16px;
-            background-color: #000;
-            border: 1px solid #333;
+            padding: 18px 22px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
             border-radius: var(--border-radius-small);
             color: var(--text-primary);
-            font-size: 1rem;
+            font-size: 1.05rem;
+            font-weight: 300;
             transition: var(--transition);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.25);
         }
 
         .form-group input[type="text"]:focus,
         .form-group input[type="tel"]:focus {
             outline: none;
             border-color: var(--accent-color);
-            box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.15);
+            background-color: var(--accent-glow);
+            box-shadow: 0 0 0 4px var(--accent-glow), 0 10px 25px rgba(0, 0, 0, 0.3);
+            transform: translateY(-1px);
         }
 
         .form-group input[type="file"]::file-selector-button {
-            background-color: #222;
-            color: white;
-            border: 1px solid #444;
-            padding: 8px 16px;
-            border-radius: 8px;
+            background-color: var(--surface-hover);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 12px 20px;
+            border-radius: 10px;
             cursor: pointer;
-            margin-right: 15px;
+            margin-right: 16px;
             transition: var(--transition);
+            font-weight: 500;
+            font-size: 0.95rem;
         }
 
         .form-group input[type="file"]::file-selector-button:hover {
-            background-color: var(--accent-color);
             border-color: var(--accent-color);
+            background-color: var(--surface-color);
+            transform: translateY(-1px);
         }
 
         button[type="submit"] {
             width: 100%;
-            margin-top: 10px;
+            margin-top: 15px;
+            padding: 20px;
         }
 
         footer {
             text-align: center;
-            padding: 40px;
+            padding: 70px 24px;
             color: var(--text-secondary);
-            border-top: 1px solid #222;
-            margin-top: 50px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 80px;
+            font-weight: 300;
+            font-size: 0.95rem;
         }
 
         .social-link {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            color: var(--text-primary);
+            gap: 14px;
+            color: var(--text-secondary);
             text-decoration: none;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 20px;
+            font-size: 1.05rem;
+            font-weight: 500;
+            margin-bottom: 28px;
             transition: var(--transition);
         }
 
         .social-link:hover {
-            color: var(--accent-color);
+            color: var(--text-primary);
+            transform: translateY(-2px);
         }
 
         .social-link svg {
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             fill: currentColor;
+            transition: var(--transition);
+        }
+
+        .social-link:hover svg {
+            fill: var(--accent-color);
         }
 
         @media (max-width: 992px) {
             .gallery-grid { grid-template-columns: repeat(3, 1fr); }
+            .nav-bar { padding: 20px 24px; }
         }
 
         @media (max-width: 768px) {
-            .form-container { padding: 30px 20px; }
-            section { padding: 60px 20px; }
-            .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .car-pill { padding: 10px 18px; font-size: 0.9rem; }
-            .lightbox-prev { left: 10px; width: 45px; height: 45px; font-size: 20px; }
-            .lightbox-next { right: 10px; width: 45px; height: 45px; font-size: 20px; }
-            .lightbox-close { top: 15px; right: 20px; }
-            .lightbox-media-container { max-width: 100%; padding: 0 10px; }
+            .form-container { padding: 40px 24px; }
+            section { padding: 90px 20px; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .lightbox-prev { left: 15px; width: 48px; height: 48px; }
+            .lightbox-next { right: 15px; width: 48px; height: 48px; }
+            .lightbox-close { top: 25px; right: 30px; font-size: 34px; }
+            .partner-section { padding: 45px 24px; }
+            .discount-code { font-size: 1.6rem; padding: 14px 24px; }
         }
     </style>
 </head>
 <body>
 
+    <nav class="nav-bar">
+        <a href="#" class="nav-brand">RedLine Club</a>
+        <button id="modeToggle" class="mode-toggle-btn">
+            <span id="modeText">Lounge Mode</span>
+            <div class="mode-indicator"></div>
+        </button>
+    </nav>
+
     <header class="hero">
         <img src="RED LINE LOGO.jpg" alt="RedLine cars event Logo" class="reveal hero-logo">
-        <h1 class="reveal">Poczuj drogę.<br>Dolny Śląsk czeka.</h1>
+        <h1 class="reveal">Poczuj drogę.<br><em>Dolny Śląsk</em> czeka.</h1>
         <p class="reveal">Zostaw miasto w lusterku wstecznym. Dołącz do zamkniętej grupy kierowców na starannie wyselekcjonowanej trasie przez najlepsze zakręty regionu.</p>
         <a href="#zapisy" class="btn-primary reveal">Zgłoś auto</a>
     </header>
@@ -513,13 +723,13 @@
             </div>
             
             <div class="card reveal">
-                <h3>Trasa II Edycji</h3>
-                <p>195 km czystej frajdy zaplanowane na <strong>29 sierpnia 2026</strong>. Zaczynamy z tajnej pinezki, przecinamy najlepsze winkle Karkonoszy – Świeradów-Zdrój, Szklarską Porębę i Karpacz, mocno zahaczając o czeską stronę. Równe 4 godziny jazdy, 8 pitstopów i meta na zasłużony posiłek w Restauracji Goduszyn.</p>
+                <h3>Trasa: 24.10.2026</h3>
+                <p>Nowa, epicka pętla na <strong>282 km</strong> i blisko 6 godzin czystej frajdy. Zaczynamy mocnym wejściem przez Góry Stołowe i Radków, lecimy do Czech uderzając na Dolní Morave i finalnie wbijamy na genialne asfalty i winkle kultowego pasma <strong>Červenohorské Sedlo</strong>.</p>
             </div>
             
             <div class="card reveal">
-                <h3>Klimat i Detale</h3>
-                <p>Zero lania wody. Zapach hamulców, ryk wydechów i zaplanowane pitstopy na genialne zdjęcia Twojego auta. Zatrzymujemy się też, by po prostu dobrze zjeść i pogadać o maszynach.</p>
+                <h3>Klimat i Jedzenie</h3>
+                <p>Zero lania wody. Zapach hamulców i ryk wydechów. Pitstopy robimy tam, gdzie są najlepsze kadry pod zdjęcia, a główny postój kulinarny spędzamy w słynnym czeskim <strong>Restaurant Biograf</strong> – knajpie z genialnym jedzeniem ukrytej w starym kinie pod Červenohorským Sedlem.</p>
             </div>
         </div>
     </section>
@@ -530,7 +740,7 @@
             <p>Skupiasz się na jeździe, dobrych zakrętach i pełnym baku. Resztę bierzemy na siebie.</p>
             
             <div class="price-tag">100 zł</div>
-            <p style="color: var(--text-secondary);">od auta / za cały wyjazd</p>
+            <p style="color: var(--text-secondary); font-weight: 300;">od auta / za cały wyjazd</p>
 
             <ul class="pricing-features">
                 <li><strong>Walkie-talkie w każdym aucie</strong> – dostajesz krótkofalówkę do bezpośredniej komunikacji. Nawigujemy na bieżąco, rozmawiamy i tworzymy wyścigowy klimat.</li>
@@ -538,41 +748,48 @@
                 <li><strong>Wyselekcjonowana droga</strong> – trasa jest idealnie dobrana, spersonalizowana i sprawdzona pod szybkie, sportowe maszyny.</li>
             </ul>
         </div>
+        
+        <div class="partner-section reveal">
+            <h3>Nie masz swojego auta na wyjazd?</h3>
+            <p>Podjęliśmy współpracę z wypożyczalnią aut sportowych <strong>OnlyFastCars</strong>. Jeśli chcesz poczuć naszą trasę za kierownicą potężnej maszyny, a nie masz własnej, odbierz gwarantowaną zniżkę używając naszego hasła:</p>
+            <div class="discount-code">REDLINE10</div>
+            <p style="margin-top: 10px; margin-bottom: 30px; color: var(--text-secondary); font-size: 0.95rem;">Kod daje Ci -10% na wynajem auta na nasz wyjazd.</p>
+            <a href="https://onlyfastcars.pl" target="_blank" class="btn-primary">Wypożycz auto ze zniżką</a>
+        </div>
     </section>
 
     <section id="uczestnicy" class="reveal">
         <div class="section-header">
             <h2>Jeździli z nami</h2>
-            <p>Maszyny, które do tej pory pokonywały z nami dolnośląskie winkle.</p>
+            <p>Maszyny, które do tej pory pokonywały z nami dolnośląskie i czeskie winkle.</p>
         </div>
         <div class="cars-list">
-            <span class="car-pill dodge">Dodge Challenger</span>
-            <span class="car-pill m4">BMW M4</span>
-            <span class="car-pill m4-cabrio">BMW M4 Cabrio</span>
-            <span class="car-pill a45s">Mercedes Benz A45S AMG</span>
-            <span class="car-pill s4">Audi S4</span>
-            <span class="car-pill rs3-limo">Audi RS3 Limousine</span>
-            <span class="car-pill rsq8">Audi RS Q8 MTM</span>
-            <span class="car-pill q60">Infiniti Q60</span>
-            <span class="car-pill s3">Audi S3 450HP</span>
-            <span class="car-pill m440i">BMW M440i</span>
-            <span class="car-pill rs3-sport">Audi RS3 Sportback</span>
-            <span class="car-pill a5">Audi A5</span>
+            <span class="car-pill">Dodge Challenger</span>
+            <span class="car-pill">BMW M4</span>
+            <span class="car-pill">BMW M4 Cabrio</span>
+            <span class="car-pill">Mercedes Benz A45S AMG</span>
+            <span class="car-pill">Audi S4</span>
+            <span class="car-pill">Audi RS3 Limousine</span>
+            <span class="car-pill">Audi RS Q8 MTM</span>
+            <span class="car-pill">Infiniti Q60</span>
+            <span class="car-pill">Audi S3 450HP</span>
+            <span class="car-pill">BMW M440i</span>
+            <span class="car-pill">Audi RS3 Sportback</span>
+            <span class="car-pill">Audi A5</span>
         </div>
     </section>
 
     <section id="galeria" class="reveal">
         <div class="section-header">
             <h2>W obiektywie</h2>
-            <p>Zobacz ujęcia z naszych poprzednich przejazdów po Dolnym Śląsku. Kliknij zdjęcie, aby powiększyć.</p>
+            <p>Zobacz ujęcia z naszych poprzednich przejazdów. Kliknij zdjęcie, aby powiększyć.</p>
         </div>
         
-        <!-- Galeria na podstawie nowego zrzutu ekranu (12 zdjęć) -->
         <div class="gallery-grid">
             <div class="gallery-item"><img src="IMG_4579.jpg" alt="RedLine Event Auto"></div>
             <div class="gallery-item"><img src="Rs3.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="IMG_8200.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="DSC_0178.jpg" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><img src="IMG_8200.JPG" alt="RedLine Event Auto"></div>
+            <div class="gallery-item"><img src="DSC_0178.JPEG" alt="RedLine Event Auto"></div>
             <div class="gallery-item"><img src="IMG_4580.jpg" alt="RedLine Event Auto"></div>
             <div class="gallery-item"><img src="IMG_4581.jpg" alt="RedLine Event Auto"></div>
             
@@ -632,7 +849,6 @@
         <p>&copy; 2026 RedLine cars event. Stworzone z pasją do motoryzacji.</p>
     </footer>
 
-    <!-- PŁYNNY LIGHTBOX -->
     <div id="lightbox" class="lightbox">
         <span class="lightbox-close">&times;</span>
         <button class="lightbox-prev">&#10094;</button>
@@ -642,6 +858,20 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            // Mode Toggle Logic
+            const modeToggle = document.getElementById('modeToggle');
+            const modeText = document.getElementById('modeText');
+            
+            modeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('sport-mode');
+                if (document.body.classList.contains('sport-mode')) {
+                    modeText.textContent = 'Sport Mode';
+                } else {
+                    modeText.textContent = 'Lounge Mode';
+                }
+            });
+
+            // Scroll Reveal Observer
             const reveals = document.querySelectorAll(".reveal");
 
             const revealOnScroll = new IntersectionObserver((entries, observer) => {
@@ -664,6 +894,7 @@
                 document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('active'));
             }, 100);
 
+            // Dynamic Car Placeholder
             const carModels = [
                 "BMW M4 Competition xDrive", "Audi RS6 Avant", "Mercedes-AMG E 63 S", 
                 "BMW M5 Competition", "Audi RS7 Sportback", "Mercedes-AMG GT 63 S 4-Door Coupe", 
@@ -686,7 +917,7 @@
                 carInput.placeholder = "np. " + randomCar;
             }
 
-            // ---- LOGIKA PŁYNNEGO LIGHTBOXA ----
+            // Lightbox Gallery Logic
             const galleryItems = document.querySelectorAll('.gallery-item');
             const lightbox = document.getElementById('lightbox');
             const lightboxContainer = document.querySelector('.lightbox-media-container');
@@ -726,7 +957,7 @@
                 lightbox.classList.remove('active');
                 setTimeout(() => {
                     lightboxContainer.innerHTML = ''; 
-                }, 400); 
+                }, 500); 
                 document.body.style.overflow = 'auto'; 
             });
 
@@ -738,7 +969,7 @@
                     lightbox.classList.remove('active');
                     setTimeout(() => {
                         lightboxContainer.innerHTML = '';
-                    }, 400);
+                    }, 500);
                     document.body.style.overflow = 'auto';
                 }
             });
@@ -752,7 +983,7 @@
                     lightbox.classList.remove('active');
                     setTimeout(() => {
                         lightboxContainer.innerHTML = '';
-                    }, 400);
+                    }, 500);
                     document.body.style.overflow = 'auto';
                 }
             });
