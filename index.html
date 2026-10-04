@@ -1,1024 +1,884 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="pl" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RedLine cars event | Wyjazdy Samochodowe na Dolnym Śląsku</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>RedLine Cars Event | Wyjazdy Samochodowe na Dolnym Śląsku & Czechach</title>
     
+    <!-- Google Fonts & Tailwind CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        redline: {
+                            50: '#fff1f1',
+                            500: '#ff2a2a',
+                            600: '#e50914',
+                            700: '#cc0000',
+                            900: '#800000',
+                            glow: 'rgba(255, 42, 42, 0.35)'
+                        },
+                        dark: {
+                            base: '#0A0B0D',
+                            surface: '#121419',
+                            card: '#181B22',
+                            border: 'rgba(255, 255, 255, 0.08)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        header: ['Space Grotesk', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        /* --- DESIGN TOKENS & DYNAMIC THEME SYSTEM --- */
-        :root {
-            --bg-color: #121110;
-            --surface-color: #1A1918;
-            --surface-hover: #222120;
-            --text-primary: #F4F0EA;
-            --text-secondary: #9E9990;
-            --accent-color: #C5A880;
-            --accent-glow: rgba(197, 168, 128, 0.15);
-            --border-color: rgba(255, 255, 255, 0.06);
-            --border-radius-large: 28px;
-            --border-radius-small: 12px;
-            --grid-gap: 32px;
-            --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            --bg-pattern: none;
+        /* Custom Keyframe Animations & Mobile Micro-interactions */
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        .glow-red {
+            box-shadow: 0 0 35px -5px rgba(255, 42, 42, 0.35);
+        }
+        .glow-border {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glow-border:hover {
+            border-color: rgba(255, 42, 42, 0.6);
+            box-shadow: 0 10px 30px -10px rgba(255, 42, 42, 0.3), inset 0 0 15px rgba(255, 42, 42, 0.05);
+            transform: translateY(-3px);
+        }
+        .shimmer-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: translateX(-100%);
+            animation: shimmer 2.8s infinite;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0A0B0D;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #262930;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff2a2a;
         }
 
-        body.sport-mode {
-            --bg-color: #080808;
-            --surface-color: #121212;
-            --surface-hover: #1a1a1a;
-            --text-primary: #FFFFFF;
-            --text-secondary: #888888;
-            --accent-color: #FF0000;
-            --accent-glow: rgba(255, 0, 0, 0.25);
-            --border-color: rgba(255, 0, 0, 0.25);
-            --border-radius-large: 6px;
-            --border-radius-small: 4px;
-            --grid-gap: 16px;
-            --bg-pattern: linear-gradient(rgba(255, 0, 0, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 0, 0, 0.03) 1px, transparent 1px);
+        /* Hide scrollbars for horizontal pill containers */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            transition: var(--transition);
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            line-height: 1.7;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            background-image: var(--bg-pattern);
-            background-size: 40px 40px;
-        }
-
-        h1, h2, h3, .price-tag, .discount-code {
-            font-family: 'Cormorant Garamond', serif;
-            letter-spacing: -0.02em;
-            font-weight: 600;
-        }
-
-        body.sport-mode h1, body.sport-mode h2, body.sport-mode h3, body.sport-mode .price-tag, body.sport-mode .discount-code {
-            font-family: 'Inter', sans-serif;
-            letter-spacing: 0.02em;
-            text-transform: uppercase;
-            font-weight: 700;
-        }
-
-        .reveal {
+        /* Reveal animations */
+        .reveal-item {
             opacity: 0;
-            transform: translateY(35px);
-            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-            will-change: opacity, transform;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .reveal.active {
+        .reveal-item.active {
             opacity: 1;
             transform: translateY(0);
         }
-
-        /* --- NAVIGATION & LAYOUT SWITCHER --- */
-        .nav-bar {
-            position: fixed;
-            top: 0; left: 0; width: 100%;
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 24px 48px;
-            background: rgba(18, 17, 16, 0.85);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        body.sport-mode .nav-bar {
-            background: rgba(8, 8, 8, 0.9);
-            border-bottom: 1px solid rgba(255, 0, 0, 0.2);
-        }
-
-        .nav-brand {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.4rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--text-primary);
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        body.sport-mode .nav-brand {
-            font-family: 'Inter', sans-serif;
-            letter-spacing: 0.15em;
-            color: #FF0000;
-            text-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
-        }
-
-        .mode-toggle-btn {
-            background: var(--surface-color);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            padding: 10px 22px;
-            border-radius: 980px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-
-        .mode-toggle-btn:hover {
-            border-color: var(--accent-color);
-            transform: translateY(-1px);
-        }
-
-        .mode-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: var(--accent-color);
-            box-shadow: 0 0 10px var(--accent-color);
-        }
-
-        /* --- HERO SECTION --- */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 140px 24px 80px 24px;
-            background: radial-gradient(circle at center top, var(--accent-glow) 0%, transparent 70%);
-            position: relative;
-        }
-
-        .hero-logo {
-            max-width: 260px;
-            width: 100%;
-            margin-bottom: 40px;
-            filter: grayscale(100%) brightness(1.2) contrast(1.1);
-            opacity: 0.9;
-        }
-
-        body.sport-mode .hero-logo {
-            filter: drop-shadow(0 0 25px rgba(255, 0, 0, 0.4));
-            opacity: 1;
-        }
-
-        .hero h1 {
-            font-size: clamp(3rem, 6.5vw, 5.5rem);
-            margin-bottom: 24px;
-            line-height: 1.05;
-            max-width: 950px;
-            font-weight: 400;
-        }
-
-        body.sport-mode .hero h1 {
-            font-weight: 800;
-            letter-spacing: -0.04em;
-        }
-
-        .hero h1 em {
-            font-style: italic;
-            color: var(--accent-color);
-        }
-
-        body.sport-mode .hero h1 em {
-            font-style: normal;
-            color: #FF0000;
-        }
-
-        .hero p {
-            font-size: clamp(1.1rem, 1.8vw, 1.3rem);
-            color: var(--text-secondary);
-            max-width: 700px;
-            margin-bottom: 48px;
-            font-weight: 300;
-        }
-
-        .btn-primary {
-            display: inline-block;
-            background-color: var(--accent-color);
-            color: #121110;
-            padding: 16px 42px;
-            border-radius: var(--border-radius-small);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            text-decoration: none;
-            cursor: pointer;
-            border: none;
-            font-weight: 600;
-            box-shadow: 0 10px 30px var(--accent-glow);
-        }
-
-        body.sport-mode .btn-primary {
-            color: #ffffff;
-            border-radius: 4px;
-            background-color: #FF0000;
-            box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 16px 35px var(--accent-glow);
-        }
-
-        .btn-primary:active {
-            transform: translateY(0) scale(0.98);
-        }
-
-        /* --- SECTIONS & GEOMETRY SHIFT --- */
-        section {
-            padding: 120px 24px;
-            max-width: 1280px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 70px;
-        }
-
-        .section-header h2 {
-            font-size: clamp(2.5rem, 4vw, 3.5rem);
-            margin-bottom: 16px;
-            font-weight: 400;
-        }
-
-        body.sport-mode .section-header h2 {
-            font-weight: 700;
-        }
-
-        .section-header p {
-            color: var(--text-secondary);
-            font-size: 1.15rem;
-            font-weight: 300;
-            max-width: 650px;
-            margin: 0 auto;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: var(--grid-gap);
-        }
-
-        .card {
-            background-color: var(--surface-color);
-            border-radius: var(--border-radius-large);
-            padding: 50px 40px;
-            border: 1px solid var(--border-color);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: translateY(-6px);
-            background-color: var(--surface-hover);
-            border-color: var(--accent-color);
-            box-shadow: 0 24px 50px rgba(0, 0, 0, 0.4), 0 0 30px var(--accent-glow);
-        }
-
-        .card h3 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            font-weight: 400;
-        }
-
-        body.sport-mode .card h3 {
-            font-weight: 700;
-            font-size: 1.7rem;
-        }
-
-        .card p, .card ul {
-            color: var(--text-secondary);
-            font-size: 1.05rem;
-            font-weight: 300;
-            line-height: 1.7;
-        }
-        
-        .card ul {
-            list-style-type: none;
-            margin-top: 18px;
-        }
-
-        .card ul li {
-            margin-bottom: 10px;
-            padding-left: 22px;
-            position: relative;
-        }
-
-        .card ul li::before {
-            content: '—';
-            position: absolute;
-            left: 0;
-            color: var(--accent-color);
-        }
-
-        /* --- PRICING & PARTNER MODULES --- */
-        .pricing {
-            text-align: center;
-            background-color: var(--surface-color);
-            border-radius: var(--border-radius-large);
-            padding: 80px 48px;
-            border: 1px solid var(--border-color);
-            position: relative;
-        }
-
-        .pricing:hover, .partner-section:hover, .form-container:hover {
-            border-color: var(--accent-color);
-            box-shadow: 0 24px 50px rgba(0, 0, 0, 0.4), 0 0 30px var(--accent-glow);
-            transform: translateY(-3px);
-        }
-
-        .pricing h2 {
-            font-size: 3.2rem;
-            margin-bottom: 12px;
-            font-weight: 400;
-        }
-        
-        .pricing .price-tag {
-            font-size: 5rem;
-            margin: 20px 0;
-            color: var(--accent-color);
-            font-weight: 700;
-            letter-spacing: -0.04em;
-            text-shadow: 0 0 40px var(--accent-glow);
-        }
-
-        .pricing-features {
-            text-align: left;
-            max-width: 640px;
-            margin: 45px auto 0 auto;
-            list-style: none;
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            font-weight: 300;
-        }
-
-        .pricing-features li {
-            margin-bottom: 20px;
-            padding-left: 40px;
-            position: relative;
-        }
-
-        .pricing-features li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            top: 1px;
-            color: var(--accent-color);
-            font-weight: 700;
-            font-size: 1.2rem;
-        }
-
-        .pricing-features strong {
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        .partner-section {
-            background-color: var(--surface-color);
-            border-radius: var(--border-radius-large);
-            padding: 60px 48px;
-            margin-top: 36px;
-            text-align: center;
-            border: 1px solid var(--border-color);
-        }
-
-        .partner-section h3 {
-            font-size: 2.2rem;
-            margin-bottom: 16px;
-            font-weight: 400;
-        }
-
-        .partner-section p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            margin-bottom: 32px;
-            max-width: 750px;
-            margin-inline: auto;
-            font-weight: 300;
-        }
-
-        .discount-code {
-            display: inline-block;
-            background-color: var(--accent-glow);
-            color: var(--accent-color);
-            border: 1px dashed var(--accent-color);
-            padding: 16px 36px;
-            font-size: 2.2rem;
-            border-radius: var(--border-radius-small);
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            font-weight: 700;
-            margin-bottom: 28px;
-        }
-
-        .discount-code:hover {
-            transform: scale(1.03);
-        }
-
-        /* --- CAR PILLS & GALLERY --- */
-        .cars-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 14px;
-            justify-content: center;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .car-pill {
-            background-color: var(--surface-color);
-            color: var(--text-secondary);
-            padding: 14px 28px;
-            border-radius: 980px;
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 500;
-            border: 1px solid var(--border-color);
-            cursor: default;
-        }
-
-        body.sport-mode .car-pill {
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .car-pill:hover {
-            transform: translateY(-3px);
-            background-color: var(--surface-hover);
-            color: var(--text-primary);
-            border-color: var(--accent-color);
-            box-shadow: 0 10px 25px var(--accent-glow);
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: var(--grid-gap);
-        }
-
-        .gallery-item {
-            position: relative;
-            aspect-ratio: 1 / 1;
-            border-radius: var(--border-radius-small);
-            overflow: hidden;
-            background-color: var(--surface-hover);
-            border: 1px solid var(--border-color);
-            cursor: pointer;
-        }
-
-        .gallery-item:hover {
-            border-color: var(--accent-color);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-glow);
-            transform: translateY(-4px);
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: brightness(0.92);
-        }
-
-        .gallery-item:hover img {
-            transform: scale(1.06);
-            filter: brightness(1.02);
-        }
-
-        /* --- LIGHTBOX --- */
-        .lightbox {
-            visibility: hidden;
-            opacity: 0;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(18, 17, 16, 0.94);
-            backdrop-filter: blur(20px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        body.sport-mode .lightbox {
-            background-color: rgba(8, 8, 8, 0.96);
-        }
-
-        .lightbox.active {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .lightbox-media-container {
-            max-width: 85%;
-            max-height: 85vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.97); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .lightbox-media-container img {
-            max-width: 100%;
-            max-height: 85vh;
-            border-radius: var(--border-radius-small);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
-            object-fit: contain;
-            animation: fadeInScale 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        .lightbox-close {
-            position: absolute;
-            top: 35px;
-            right: 45px;
-            color: var(--text-secondary);
-            font-size: 42px;
-            font-weight: 300;
-            cursor: pointer;
-            line-height: 1;
-            z-index: 10000;
-        }
-
-        .lightbox-close:hover {
-            color: var(--text-primary);
-            transform: scale(1.1);
-        }
-
-        .lightbox-prev, .lightbox-next {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: var(--surface-color);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            font-size: 20px;
-            width: 60px;
-            height: 60px;
-            cursor: pointer;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-        }
-
-        .lightbox-prev:hover, .lightbox-next:hover {
-            background: var(--surface-hover);
-            border-color: var(--accent-color);
-            transform: translateY(-50%) scale(1.05);
-        }
-
-        .lightbox-prev { left: 40px; }
-        .lightbox-next { right: 40px; }
-
-        /* --- FORM CONTAINER --- */
-        .form-container {
-            max-width: 660px;
-            margin: 0 auto;
-            background-color: var(--surface-color);
-            padding: 60px;
-            border-radius: var(--border-radius-large);
-            border: 1px solid var(--border-color);
-        }
-
-        .form-group {
-            margin-bottom: 26px;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 12px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            letter-spacing: 0.02em;
-        }
-
-        .form-group input[type="text"],
-        .form-group input[type="tel"],
-        .form-group input[type="file"] {
-            width: 100%;
-            padding: 18px 22px;
-            background-color: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-small);
-            color: var(--text-primary);
-            font-size: 1.05rem;
-            font-weight: 300;
-        }
-
-        .form-group input::placeholder {
-            color: rgba(255, 255, 255, 0.25);
-        }
-
-        .form-group input[type="text"]:focus,
-        .form-group input[type="tel"]:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            background-color: var(--accent-glow);
-            box-shadow: 0 0 0 4px var(--accent-glow), 0 10px 25px rgba(0, 0, 0, 0.3);
-            transform: translateY(-1px);
-        }
-
-        .form-group input[type="file"]::file-selector-button {
-            background-color: var(--surface-hover);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            padding: 12px 20px;
-            border-radius: var(--border-radius-small);
-            cursor: pointer;
-            margin-right: 16px;
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-
-        .form-group input[type="file"]::file-selector-button:hover {
-            border-color: var(--accent-color);
-            background-color: var(--surface-color);
-            transform: translateY(-1px);
-        }
-
-        button[type="submit"] {
-            width: 100%;
-            margin-top: 15px;
-            padding: 20px;
-        }
-
-        /* --- FOOTER --- */
-        footer {
-            text-align: center;
-            padding: 70px 24px;
-            color: var(--text-secondary);
-            border-top: 1px solid var(--border-color);
-            margin-top: 80px;
-            font-weight: 300;
-            font-size: 0.95rem;
-        }
-
-        .social-link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 1.05rem;
-            font-weight: 500;
-            margin-bottom: 28px;
-        }
-
-        .social-link:hover {
-            color: var(--text-primary);
-            transform: translateY(-2px);
-        }
-
-        .social-link svg {
-            width: 22px;
-            height: 22px;
-            fill: currentColor;
-        }
-
-        .social-link:hover svg {
-            fill: var(--accent-color);
-        }
-
-        @media (max-width: 992px) {
-            .gallery-grid { grid-template-columns: repeat(3, 1fr); }
-            .nav-bar { padding: 20px 24px; }
-        }
-
-        @media (max-width: 768px) {
-            .form-container { padding: 40px 24px; }
-            section { padding: 90px 20px; }
-            .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-            .lightbox-prev { left: 15px; width: 48px; height: 48px; }
-            .lightbox-next { right: 15px; width: 48px; height: 48px; }
-            .lightbox-close { top: 25px; right: 30px; font-size: 34px; }
-            .partner-section { padding: 45px 24px; }
-            .discount-code { font-size: 1.6rem; padding: 14px 24px; }
-        }
     </style>
 </head>
-<body>
+<body class="bg-dark-base text-slate-100 font-sans selection:bg-redline-500 selection:text-white overflow-x-hidden antialiased pb-20 sm:pb-0">
 
-    <nav class="nav-bar">
-        <a href="#" class="nav-brand">RedLine Club</a>
-        <button id="modeToggle" class="mode-toggle-btn">
-            <span id="modeText">Sport Mode</span>
-            <div class="mode-indicator"></div>
-        </button>
-    </nav>
-
-    <header class="hero">
-        <img src="RED LINE LOGO.jpg" alt="RedLine cars event Logo" class="reveal hero-logo">
-        <h1 class="reveal">Poczuj drogę.<br><em>Dolny Śląsk</em> czeka.</h1>
-        <p class="reveal">Zostaw miasto w lusterku wstecznym. Dołącz do zamkniętej grupy kierowców na starannie wyselekcjonowanej trasie przez najlepsze zakręty regionu.</p>
-        <a href="#zapisy" class="btn-primary reveal">Zgłoś auto</a>
-    </header>
-
-    <section class="features">
-        <div class="section-header reveal">
-            <h2>Stworzone dla kierowców</h2>
-            <p>Nie organizujemy wycieczek. Organizujemy wyjazdy dla tych, którzy kochają prowadzić.</p>
-        </div>
-
-        <div class="grid">
-            <div class="card reveal">
-                <h3>Elitarna Grupa</h3>
-                <p>M, RS, AMG. Z nami jeździli już właściciele takich maszyn jak Dodge Challenger, BMW M4, Audi RS Q8 MTM czy Mercedes-AMG A 45 S. Czas na Ciebie.</p>
-            </div>
-            
-            <div class="card reveal">
-                <h3>Trasa: 24.10.2026</h3>
-                <p>Nowa, epicka pętla na <strong>282 km</strong> i blisko 6 godzin czystej frajdy. Zaczynamy mocnym wejściem przez Góry Stołowe i Radków, lecimy do Czech uderzając na Dolní Morave i finalnie wbijamy na genialne asfalty i winkle kultowego pasma <strong>Červenohorské Sedlo</strong>.</p>
-            </div>
-            
-            <div class="card reveal">
-                <h3>Klimat i Jedzenie</h3>
-                <p>Zero lania wody. Zapach hamulców i ryk wydechów. Pitstopy robimy tam, gdzie są najlepsze kadry pod zdjęcia, a główny postój kulinarny spędzamy w słynnym czeskim <strong>Restaurant Biograf</strong> – knajpie z genialnym jedzeniem ukrytej w starym kinie pod Červenohorským Sedlem.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="reveal">
-        <div class="pricing">
-            <h2>Jasny układ.</h2>
-            <p>Skupiasz się na jeździe, dobrych zakrętach i pełnym baku. Resztę bierzemy na siebie.</p>
-            
-            <div class="price-tag">100 zł</div>
-            <p style="color: var(--text-secondary); font-weight: 300;">od auta / za cały wyjazd</p>
-
-            <ul class="pricing-features">
-                <li><strong>Walkie-talkie w każdym aucie</strong> – dostajesz krótkofalówkę do bezpośredniej komunikacji. Nawigujemy na bieżąco, rozmawiamy i tworzymy wyścigowy klimat.</li>
-                <li><strong>Pełna opieka na trasie</strong> – nasz pilot prowadzi grupę i nadaje tempo. Nie musisz martwić się o mapy i rozwidlenia.</li>
-                <li><strong>Wyselekcjonowana droga</strong> – trasa jest idealnie dobrana, spersonalizowana i sprawdzona pod szybkie, sportowe maszyny.</li>
-            </ul>
-        </div>
-        
-        <div class="partner-section reveal">
-            <h3>Nie masz swojego auta na wyjazd?</h3>
-            <p>Podjęliśmy współpracę z wypożyczalnią aut sportowych <strong>OnlyFastCars</strong>. Jeśli chcesz poczuć naszą trasę za kierownicą potężnej maszyny, a nie masz własnej, odbierz gwarantowaną zniżkę używając naszego hasła:</p>
-            <div class="discount-code">REDLINE10</div>
-            <p style="margin-top: 10px; margin-bottom: 30px; color: var(--text-secondary); font-size: 0.95rem;">Kod daje Ci -10% na wynajem auta na nasz wyjazd.</p>
-            <a href="https://onlyfastcars.pl" target="_blank" class="btn-primary">Wypożycz auto ze zniżką</a>
-        </div>
-    </section>
-
-    <section id="uczestnicy" class="reveal">
-        <div class="section-header">
-            <h2>Jeździli z nami</h2>
-            <p>Maszyny, które do tej pory pokonywały z nami dolnośląskie i czeskie winkle.</p>
-        </div>
-        <div class="cars-list">
-            <span class="car-pill">Dodge Challenger</span>
-            <span class="car-pill">BMW M4</span>
-            <span class="car-pill">BMW M4 Cabrio</span>
-            <span class="car-pill">Mercedes Benz A45S AMG</span>
-            <span class="car-pill">Audi S4</span>
-            <span class="car-pill">Audi RS3 Limousine</span>
-            <span class="car-pill">Audi RS Q8 MTM</span>
-            <span class="car-pill">Infiniti Q60</span>
-            <span class="car-pill">Audi S3 450HP</span>
-            <span class="car-pill">BMW M440i</span>
-            <span class="car-pill">Audi RS3 Sportback</span>
-            <span class="car-pill">Audi A5</span>
-        </div>
-    </section>
-
-    <section id="galeria" class="reveal">
-        <div class="section-header">
-            <h2>W obiektywie</h2>
-            <p>Zobacz ujęcia z naszych poprzednich przejazdów. Kliknij zdjęcie, aby powiększyć.</p>
-        </div>
-        
-        <div class="gallery-grid">
-            <div class="gallery-item"><img src="IMG_4579.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="Rs3.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="IMG_8200.JPG" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="DSC_0178.JPEG" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="IMG_4580.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="IMG_4581.jpg" alt="RedLine Event Auto"></div>
-            
-            <div class="gallery-item"><img src="BMW M4-13.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="RSQ8MTM-12.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="DSC_0112.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="DSC_0108.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="DSC_0109.jpg" alt="RedLine Event Auto"></div>
-            <div class="gallery-item"><img src="DSC_0111.jpg" alt="RedLine Event Auto"></div>
-        </div>
-    </section>
-
-    <section id="zapisy" class="reveal">
-        <div class="section-header">
-            <h2>Zarezerwuj miejsce</h2>
-            <p>Wypełnij formularz. Odezwiemy się ze szczegółami najbliższego wyjazdu.</p>
-        </div>
-
-        <div class="form-container">
-            <form action="https://formsubmit.co/RedLinecars@proton.me" method="POST" enctype="multipart/form-data">
-                
-                <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_subject" value="Nowe zgłoszenie - RedLine cars event!">
-
-                <div class="form-group">
-                    <label for="name">Imię kierowcy</label>
-                    <input type="text" id="name" name="Imię" required placeholder="np. Tomek">
-                </div>
-
-                <div class="form-group">
-                    <label for="phone">Kontakt / Nr telefonu</label>
-                    <input type="tel" id="phone" name="Telefon" required placeholder="np. +48 123 456 789">
-                </div>
-
-                <div class="form-group">
-                    <label for="car">Marka i model auta</label>
-                    <input type="text" id="car" name="Auto" required placeholder="np. BMW M440i">
-                </div>
-
-                <div class="form-group">
-                    <label for="photo">Zdjęcie auta (opcjonalnie, mocno pożądane)</label>
-                    <input type="file" id="photo" name="Zdjęcie_Auta" accept="image/*">
-                </div>
-
-                <button type="submit" class="btn-primary">Wyślij zgłoszenie</button>
-            </form>
-        </div>
-    </section>
-
-    <footer>
-        <a href="https://www.instagram.com/redline.oneee/" target="_blank" class="social-link">
-            <svg viewBox="0 0 24 24">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
-            </svg>
-            Obserwuj nas na Instagramie
-        </a>
-        <p>&copy; 2026 RedLine cars event. Stworzone z pasją do motoryzacji.</p>
-    </footer>
-
-    <div id="lightbox" class="lightbox">
-        <span class="lightbox-close">&times;</span>
-        <button class="lightbox-prev">&#10094;</button>
-        <div class="lightbox-media-container"></div>
-        <button class="lightbox-next">&#10095;</button>
+    <!-- ANNOUNCEMENT TICKER -->
+    <div class="bg-gradient-to-r from-redline-700 via-redline-500 to-black text-white text-[11px] font-header font-bold uppercase tracking-[0.2em] py-2 px-4 text-center flex items-center justify-center gap-3 shadow-md z-50 relative">
+        <span class="flex h-2 w-2 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+        </span>
+        <span>REKRUTACJA OTWARTA • EDYCJA 24.10.2026 • DOLNY ŚLĄSK & CZECHY 🇨🇿 • ZOSTAŁY OSTATNIE MIEJSCA W KOLUMNIE</span>
     </div>
 
+    <!-- STICKY NAVBAR -->
+    <nav class="sticky top-0 z-40 bg-dark-base/90 backdrop-blur-xl border-b border-dark-border shadow-2xl transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Brand Logo / Title -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-10 h-10 bg-gradient-to-br from-redline-500 to-redline-700 text-white flex items-center justify-center font-header font-extrabold text-xl tracking-tighter transform -skew-x-12 group-hover:scale-105 transition-transform shadow-lg shadow-redline-900/50">
+                        RL
+                    </div>
+                    <div class="flex flex-col">
+                        <span className="font-header text-xl font-extrabold tracking-[0.2em] text-white leading-none">
+                            RED<span class="text-redline-500">LINE</span>
+                        </span>
+                        <span class="text-[9px] font-mono tracking-widest text-slate-400 uppercase mt-0.5">
+                            CARS EVENT • DOLNY ŚLĄSK
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8 text-xs font-header font-semibold uppercase tracking-widest text-slate-300">
+                    <a href="#trasa" class="hover:text-redline-500 transition-colors">Trasa i Pętla</a>
+                    <a href="#dlaczego" class="hover:text-redline-500 transition-colors">Dla Kogo</a>
+                    <a href="#uczestnicy" class="hover:text-redline-500 transition-colors">Flota</a>
+                    <a href="#galeria" class="hover:text-redline-500 transition-colors">Galeria</a>
+                    <a href="#partnerzy" class="hover:text-redline-500 transition-colors">Wynajem</a>
+                </div>
+
+                <!-- Action Button & Mobile Menu Trigger -->
+                <div class="flex items-center gap-4">
+                    <a href="#zapisy" class="shimmer-btn hidden sm:inline-flex bg-redline-500 hover:bg-redline-600 text-white text-xs font-header font-bold uppercase tracking-widest px-6 py-3.5 shadow-lg shadow-redline-900/40 transition-all items-center gap-2">
+                        <i data-lucide="gauge" class="w-4 h-4"></i>
+                        <span>Zgłoś Auto</span>
+                    </a>
+
+                    <button id="mobileMenuBtn" class="md:hidden p-2.5 text-slate-300 hover:text-white border border-dark-border rounded-lg bg-dark-card">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mobile Slide-Down Overlay Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-dark-surface border-b border-dark-border px-6 py-6 space-y-4 font-header text-xs uppercase tracking-widest animate-fadeIn">
+            <a href="#trasa" class="mobile-link block py-2.5 border-b border-dark-border/50 text-slate-300 hover:text-redline-500">Trasa 282 KM i Pętla</a>
+            <a href="#dlaczego" class="mobile-link block py-2.5 border-b border-dark-border/50 text-slate-300 hover:text-redline-500">O Wyjeździe & Radiostacje</a>
+            <a href="#uczestnicy" class="mobile-link block py-2.5 border-b border-dark-border/50 text-slate-300 hover:text-redline-500">Uczestnicy & Auta</a>
+            <a href="#galeria" class="mobile-link block py-2.5 border-b border-dark-border/50 text-slate-300 hover:text-redline-500">Galeria Zdjęć</a>
+            <a href="#partnerzy" class="mobile-link block py-2.5 border-b border-dark-border/50 text-slate-300 hover:text-redline-500">Wypożycz z Kodem -10%</a>
+            <a href="#zapisy" class="mobile-link block text-center bg-redline-500 text-white font-bold py-3.5 shadow-lg">Wypełnij Zgłoszenie</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="relative min-h-[90vh] flex items-center border-b border-dark-border overflow-hidden pt-10 pb-16">
+        <!-- Ambient Background Glow & Grids -->
+        <div class="absolute inset-0 z-0 opacity-30">
+            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-redline-500/20 rounded-full blur-[140px] pointer-events-none animate-pulseGlow"></div>
+            <div class="w-full h-full bg-[radial-gradient(#262930_1px,transparent_1px)] [background-size:28px_28px] opacity-40"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Hero Content -->
+                <div class="lg:col-span-7 space-y-8">
+                    
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-redline-900/40 border border-redline-500/40 backdrop-blur-md text-redline-500 text-[11px] font-header font-semibold uppercase tracking-widest rounded-full">
+                        <span class="text-sm">🇨🇿</span>
+                        <span>Dolny Śląsk & Czechy • Červenohorské Sedlo</span>
+                    </div>
+
+                    <h1 class="font-header text-4xl sm:text-6xl xl:text-7xl font-extrabold tracking-tight text-white leading-[1.03]">
+                        POCZUJ DROGĘ. <br />
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-redline-500 via-orange-400 to-white">
+                            ZDOBYWAJ ZAKRĘTY.
+                        </span>
+                    </h1>
+
+                    <p class="text-slate-300 text-base sm:text-lg max-w-xl leading-relaxed font-normal">
+                        Zostaw miasto w lusterku wstecznym. Dołącz do zamkniętej grupy kierowców aut sportowych na wyselekcjonowanej trasie przez najlepsze asfalty i winkle regionu.
+                    </p>
+
+                    <!-- Interactive Countdown Timer Box -->
+                    <div class="bg-dark-card/90 backdrop-blur-xl border border-dark-border p-5 sm:p-6 max-w-lg glow-red rounded-none">
+                        <div class="text-[10px] font-header font-bold uppercase tracking-widest text-slate-400 mb-3 flex items-center justify-between">
+                            <span class="flex items-center gap-2">
+                                <i data-lucide="calendar" class="w-4 h-4 text-redline-500"></i>
+                                Start Wyjazdu: 24 Października 2026
+                            </span>
+                            <span class="text-redline-500 font-mono text-[11px]">● 282 KM PĘTLA</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-4 gap-2.5 text-center">
+                            <div class="bg-dark-base p-2.5 border border-dark-border">
+                                <div id="timerDays" class="font-header text-2xl sm:text-3xl font-extrabold text-white">00</div>
+                                <div class="text-[9px] uppercase tracking-wider text-slate-400 font-semibold mt-1">Dni</div>
+                            </div>
+                            <div class="bg-dark-base p-2.5 border border-dark-border">
+                                <div id="timerHours" class="font-header text-2xl sm:text-3xl font-extrabold text-white">00</div>
+                                <div class="text-[9px] uppercase tracking-wider text-slate-400 font-semibold mt-1">Godzin</div>
+                            </div>
+                            <div class="bg-dark-base p-2.5 border border-dark-border">
+                                <div id="timerMinutes" class="font-header text-2xl sm:text-3xl font-extrabold text-white">00</div>
+                                <div class="text-[9px] uppercase tracking-wider text-slate-400 font-semibold mt-1">Minut</div>
+                            </div>
+                            <div class="bg-dark-base p-2.5 border border-dark-border">
+                                <div id="timerSeconds" class="font-header text-2xl sm:text-3xl font-extrabold text-redline-500 font-mono">00</div>
+                                <div class="text-[9px] uppercase tracking-wider text-slate-400 font-semibold mt-1">Sekund</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-wrap items-center gap-4 pt-2">
+                        <a href="#zapisy" class="shimmer-btn bg-white hover:bg-slate-200 text-black font-header font-bold text-xs uppercase tracking-widest px-8 py-4 transition-all flex items-center gap-2 shadow-2xl">
+                            <span>Zgłoś Swoje Auto</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+
+                        <a href="#trasa" class="bg-dark-surface hover:bg-dark-card text-slate-200 border border-dark-border hover:border-slate-500 font-header font-bold text-xs uppercase tracking-widest px-8 py-4 transition-all flex items-center gap-2">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-redline-500"></i>
+                            <span>Odkryj Trasę</span>
+                        </a>
+                    </div>
+
+                </div>
+
+                <!-- Right Hero Card / Showcase Video Visual -->
+                <div class="lg:col-span-5 relative">
+                    <div class="glow-border bg-dark-card p-3 relative overflow-hidden group">
+                        <div class="relative aspect-[4/3] overflow-hidden bg-black border border-dark-border">
+                            <img src="IMG_4579.jpg" id="heroFeaturedImg" onError="this.src='https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80'" alt="RedLine Event Sports Car" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 filter brightness-95">
+                            
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
+
+                            <!-- Czech Flag & Event Tag Badge -->
+                            <div class="absolute top-4 left-4 bg-redline-600/90 backdrop-blur-md text-white text-[10px] font-header font-bold uppercase tracking-widest px-3 py-1.5 shadow-lg flex items-center gap-2">
+                                <span class="text-sm">🇨🇿</span>
+                                <span>Wyjazd Dolny Śląsk & Czechy</span>
+                            </div>
+
+                            <div class="absolute bottom-4 left-4 right-4 p-4 bg-dark-base/90 backdrop-blur-md border border-dark-border space-y-1">
+                                <div class="flex items-center justify-between text-xs font-header font-bold text-white">
+                                    <span class="flex items-center gap-1.5">
+                                        <i data-lucide="radio" class="w-3.5 h-3.5 text-redline-500 animate-pulse"></i>
+                                        Łączność Walkie-Talkie
+                                    </span>
+                                    <span class="text-redline-500 font-mono">100 zł / Auto</span>
+                                </div>
+                                <div class="text-[11px] text-slate-400 flex items-center gap-1.5">
+                                    <span>Góry Stołowe • Radków • Červenohorské Sedlo</span>
+                                    <span>🇨🇿</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Quick Stats Ticker Bar -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 pt-10 border-t border-dark-border/80">
+                <div class="bg-dark-surface border border-dark-border p-5 text-center sm:text-left">
+                    <div class="font-header text-3xl sm:text-4xl font-extrabold text-white tracking-tight">282 KM</div>
+                    <div class="text-xs font-header font-bold text-redline-500 uppercase tracking-widest mt-1">Dystans Pętli</div>
+                    <div class="text-[11px] text-slate-400 mt-0.5">Ponad 6h jazdy po zakrętach</div>
+                </div>
+
+                <div class="bg-dark-surface border border-dark-border p-5 text-center sm:text-left">
+                    <div class="font-header text-3xl sm:text-4xl font-extrabold text-white tracking-tight">100 PLN</div>
+                    <div class="text-xs font-header font-bold text-redline-500 uppercase tracking-widest mt-1">Opłata Wpisowa</div>
+                    <div class="text-[11px] text-slate-400 mt-0.5">Krótkofalówka + Pilot na trasie</div>
+                </div>
+
+                <div class="bg-dark-surface border border-dark-border p-5 text-center sm:text-left">
+                    <div class="font-header text-3xl sm:text-4xl font-extrabold text-white tracking-tight">100%</div>
+                    <div class="text-xs font-header font-bold text-redline-500 uppercase tracking-widest mt-1">Czysta Pasja</div>
+                    <div class="text-[11px] text-slate-400 mt-0.5">Fotografowie & Krótkofalówki</div>
+                </div>
+
+                <div class="bg-dark-surface border border-dark-border p-5 text-center sm:text-left">
+                    <div class="font-header text-3xl sm:text-4xl font-extrabold text-white tracking-tight">-10%</div>
+                    <div class="text-xs font-header font-bold text-redline-500 uppercase tracking-widest mt-1">Zniżka Wynajem</div>
+                    <div class="text-[11px] text-slate-400 mt-0.5">Kod REDLINE10 w OnlyFastCars</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ROUTE & STAGE EXPLORER SECTION -->
+    <section id="trasa" class="py-24 bg-dark-base border-b border-dark-border relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+                <div>
+                    <span class="text-xs font-header uppercase tracking-[0.3em] text-redline-500 font-bold flex items-center gap-2">
+                        <i data-lucide="map" class="w-4 h-4 text-redline-500"></i>
+                        Scenariusz Wyjazdu
+                    </span>
+                    <h2 class="font-header text-3xl sm:text-5xl font-bold text-white mt-2">
+                        TRASA 282 KM • LEGENDARNE WINKLE
+                    </h2>
+                </div>
+                <div class="text-slate-400 text-xs sm:text-sm max-w-md leading-relaxed">
+                    Trasa jest autorsko dobrana pod kątem nawierzchni, zakrętów i spektakularnych widoków. Prowadzi nasz pilot, który narzuca rytm i nawiguje kolumnę.
+                </div>
+            </div>
+
+            <!-- Route Cards Grid -->
+            <div class="grid md:grid-cols-3 gap-8">
+                
+                <!-- Stage 1 -->
+                <div class="glow-border bg-dark-surface p-8 relative space-y-4">
+                    <div class="flex items-center justify-between border-b border-dark-border pb-4">
+                        <span class="text-xs font-mono text-redline-500 uppercase font-bold">Etap 01</span>
+                        <span class="text-[10px] bg-dark-base border border-dark-border px-2.5 py-1 text-slate-300 font-mono">Start & Górskie Otwarcie</span>
+                    </div>
+                    <h3 class="font-header text-xl font-bold text-white">Góry Stołowe & Radków</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                        Zaczynamy od mocnego wejścia. Kręte odcinki przez Góry Stołowe i przełęcz w Radkowie pozwalają dogrzać opony oraz poczuć pracę zawieszenia.
+                    </p>
+                    <div class="pt-2 text-[11px] text-slate-300 flex items-center gap-2 font-mono">
+                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-redline-500"></i>
+                        Płynna nawierzchnia & ostre zakręty
+                    </div>
+                </div>
+
+                <!-- Stage 2 -->
+                <div class="glow-border bg-dark-surface p-8 relative space-y-4">
+                    <div class="flex items-center justify-between border-b border-dark-border pb-4">
+                        <span class="text-xs font-mono text-redline-500 uppercase font-bold flex items-center gap-1.5">
+                            <span>Etap 02</span>
+                            <span>🇨🇿</span>
+                        </span>
+                        <span class="text-[10px] bg-dark-base border border-dark-border px-2.5 py-1 text-slate-300 font-mono">Przekraczamy Granicę</span>
+                    </div>
+                    <h3 class="font-header text-xl font-bold text-white">Dolní Morava & Czechy 🇨🇿</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                        Wbijamy do Czeskiej Republiki, obierając kurs na malownicze pasma wokół Dolní Moravy. Długie łuki i szerokie sekcje do jazd w kolumnie.
+                    </p>
+                    <div class="pt-2 text-[11px] text-slate-300 flex items-center gap-2 font-mono">
+                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-redline-500"></i>
+                        Widokowe proste i foto-points
+                    </div>
+                </div>
+
+                <!-- Stage 3 -->
+                <div class="glow-border bg-dark-surface p-8 relative space-y-4">
+                    <div class="flex items-center justify-between border-b border-dark-border pb-4">
+                        <span class="text-xs font-mono text-redline-500 uppercase font-bold flex items-center gap-1.5">
+                            <span>Etap 03</span>
+                            <span>🇨🇿</span>
+                        </span>
+                        <span class="text-[10px] bg-dark-base border border-dark-border px-2.5 py-1 text-slate-300 font-mono">Kultowy Odcinek</span>
+                    </div>
+                    <h3 class="font-header text-xl font-bold text-white">Červenohorské Sedlo 🇨🇿</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                        Wisienka na torze. Rajdowa klasyka, perfekcyjny gładki asfalt i seria nawrotów, na których każdy zakręt dostarcza maksymalnych emocji.
+                    </p>
+                    <div class="pt-2 text-[11px] text-slate-300 flex items-center gap-2 font-mono">
+                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-redline-500"></i>
+                        Kultowa pętla wyścigowa
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Culinary Break Box -->
+            <div class="mt-12 bg-dark-surface border border-dark-border p-8 sm:p-10 glow-border relative overflow-hidden">
+                <div class="grid md:grid-cols-12 gap-8 items-center">
+                    <div class="md:col-span-8 space-y-3">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-redline-900/30 border border-redline-500/30 text-redline-500 text-[10px] font-mono uppercase font-bold">
+                            <i data-lucide="utensils" class="w-3.5 h-3.5"></i>
+                            Główny Przystanek Kulinarny 🇨🇿
+                        </span>
+                        <h3 class="font-header text-2xl sm:text-3xl font-bold text-white flex items-center gap-2">
+                            <span>Słynny Restaurant Biograf (Czechy)</span>
+                            <span class="text-xl">🇨🇿</span>
+                        </h3>
+                        <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                            Zero przypadkowych miejsc. Główny postój robimy w legendarnej czeskiej knajpie Restaurant Biograf – urządzonym w starym kinie pod Červenohorským Sedlem, serwującym genialne jedzenie i wyśmienitą atmosferę do wymiany wrażeń z trasa.
+                        </p>
+                    </div>
+
+                    <div class="md:col-span-4 flex items-center justify-end">
+                        <a href="#zapisy" class="w-full sm:w-auto bg-white hover:bg-slate-200 text-black font-header font-bold text-xs uppercase tracking-widest px-8 py-4 transition-all text-center">
+                            Zarezerwuj Miejsce
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FEATURES & WHY JOIN SECTION -->
+    <section id="dlaczego" class="py-24 bg-dark-surface border-b border-dark-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+                <span class="text-xs font-header uppercase tracking-[0.3em] text-redline-500 font-bold">
+                    Standard RedLine Club
+                </span>
+                <h2 class="font-header text-3xl sm:text-5xl font-bold text-white tracking-tight">
+                    STWORZONE DLA KIEROWCÓW
+                </h2>
+                <p class="text-slate-400 text-sm">
+                    Nie organizujemy wolnych wycieczek. Organizujemy przejazdy dla tych, którzy naprawdę kochają prowadzić.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                
+                <!-- Feature 1 -->
+                <div class="glow-border bg-dark-card p-8 space-y-4">
+                    <div class="w-12 h-12 bg-redline-900/40 border border-redline-500/40 flex items-center justify-center text-redline-500">
+                        <i data-lucide="radio" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-header text-xl font-bold text-white">Radiostacje Walkie-Talkie</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                        Każde auto dostaje od nas krótkofalówkę. Informujemy o zagrożeniach na trasie, ostrzegamy przed wolniejszym ruchem i dbamy o świetny klimat.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="glow-border bg-dark-card p-8 space-y-4">
+                    <div class="w-12 h-12 bg-redline-900/40 border border-redline-500/40 flex items-center justify-center text-redline-500">
+                        <i data-lucide="shield-check" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-header text-xl font-bold text-white">Prowadzenie przez Pilota</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                        Nie musisz ciągle patrzeć w GPS ani bać się, że zgubisz zjazd. Nasz doświadczony pilot prowadzi całą grupę i nadaje odpowiednie tempo.
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="glow-border bg-dark-card p-8 space-y-4">
+                    <div class="w-12 h-12 bg-redline-900/40 border border-redline-500/40 flex items-center justify-center text-redline-500">
+                        <i data-lucide="camera" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-header text-xl font-bold text-white">Fotografowie na Trasie</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                        Kultowe kadry z jazdy w kolumnie i punktów widokowych. Po wyjeździe otrzymujesz dostęp do galerii zdjęć Twojego auta w ruchu.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- PRICING CARD -->
+            <div class="mt-16 bg-dark-card border border-dark-border p-8 sm:p-12 text-center max-w-3xl mx-auto glow-red">
+                <span class="text-xs font-header uppercase tracking-[0.25em] text-slate-400 font-semibold block mb-2">
+                    Przejrzyste Zasady
+                </span>
+                <h3 class="font-header text-3xl sm:text-4xl font-bold text-white">100 PLN / AUTO</h3>
+                <p class="text-slate-400 text-xs mt-2">Jednorazowa opłata za cały wyjazd i przygotowanie trasy</p>
+
+                <ul class="text-left max-w-md mx-auto mt-8 space-y-3 text-xs sm:text-sm text-slate-300">
+                    <li class="flex items-center gap-3">
+                        <i data-lucide="check" class="w-4 h-4 text-redline-500 shrink-0"></i>
+                        <span>Krótkofalówka Walkie-Talkie do komunikacji na żywo</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i data-lucide="check" class="w-4 h-4 text-redline-500 shrink-0"></i>
+                        <span>Kompleksowe prowadzenie przez pilota grupy</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i data-lucide="check" class="w-4 h-4 text-redline-500 shrink-0"></i>
+                        <span>Dostęp do oficjalnej fotorelacji po wyjeździe</span>
+                    </li>
+                </ul>
+
+                <a href="#zapisy" class="shimmer-btn inline-block bg-redline-500 hover:bg-redline-600 text-white font-header font-bold text-xs uppercase tracking-widest px-10 py-4 mt-8 transition-all shadow-xl">
+                    Aplikuj o Miejsce w Kolumnie
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CAR FLEET SHOWCASE ("JEŹDZILI Z NAMI") -->
+    <section id="uczestnicy" class="py-24 bg-dark-base border-b border-dark-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+                <div>
+                    <span class="text-xs font-header uppercase tracking-[0.3em] text-redline-500 font-bold flex items-center gap-2">
+                        <i data-lucide="car" class="w-4 h-4 text-redline-500"></i>
+                        Społeczność RedLine
+                    </span>
+                    <h2 class="font-header text-3xl sm:text-5xl font-bold text-white mt-2">
+                        JEŹDZILI Z NAMI
+                    </h2>
+                </div>
+                <p class="text-slate-400 text-xs sm:text-sm max-w-md">
+                    Wspólnie pokonywaliśmy dolnośląskie i czeskie winkle na pokładach wyjątkowych maszyn z segmentu M, RS, AMG i kultowych modeli GT.
+                </p>
+            </div>
+
+            <!-- Car Pills Horizontal List -->
+            <div class="flex flex-wrap gap-3 justify-center max-w-5xl mx-auto">
+                <span class="bg-dark-card border border-dark-border px-5 py-3 text-xs font-header font-bold text-slate-200 uppercase tracking-wider hover:border-redline-500 transition-colors">Dodge Challenger</span>
+                <span class="bg-dark-card border border-dark-border px-5 py-3 text-xs font-header font-bold text-slate-200 uppercase tracking-wider hover:border-redline-500 transition-colors">BMW M4 Competition</span>
+                <span class="bg-dark-card border border-dark-border px-5 py-3 text-xs font-header font-bold text-slate-200 uppercase tracking-wider hover:border-redline-500 transition-colors">BMW M4 Cabrio</span>
+                <span class="bg-dark-card border border-dark-border px-5 py-3 text-xs font-header font-bold text-slate-200 uppercase tracking-wider hover:border-redline-500 transition-colors">Mercedes-AMG A 45 S</span>
+                <span class="bg-dark-card border border-dark-border px-5 py-3 text-xs font-header font-bold text-slate-200 uppercase tracking-wider hover:border-redline-500 transition-colors">Audi S4</span>
+                <span class="bg-dark-card border border-dark-border px-5 py-3 text-xs font-header font-bold text-slate-200 uppercase tracking-wider hover:border-redline-500 transition-colors">Audi RS3 Limousine</span>
+                <span class="bg-dark-card border border-dark-border px-5 py-3 text-xs font-header font-bold text-slate-200 uppercase tracking-wider hover:border-redline-500 transition-colors">Audi RS Q8 MTM</span>
+                <span class="bg-dark-card border border-dark-border px-5 py-3 text-xs font-header font-bold text-slate-200 uppercase tracking-wider hover:border-redline-500 transition-colors">Infiniti Q60</span>
+                <span class="bg-dark-card border border-dark-border px-5 py-3 text-xs font-header font-bold text-slate-200 uppercase tracking-wider hover:border-redline-500 transition-colors">Audi S3 450 HP</span>
+                <span class="bg-dark-card border border-dark-border px-5 py-3 text-xs font-header font-bold text-slate-200 uppercase tracking-wider hover:border-redline-500 transition-colors">BMW M440i xDrive</span>
+                <span class="bg-dark-card border border-dark-border px-5 py-3 text-xs font-header font-bold text-slate-200 uppercase tracking-wider hover:border-redline-500 transition-colors">Audi RS3 Sportback</span>
+                <span class="bg-dark-card border border-dark-border px-5 py-3 text-xs font-header font-bold text-slate-200 uppercase tracking-wider hover:border-redline-500 transition-colors">Audi A5 S-Line</span>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- PARTNER RENTAL CAR SECTION (ONLYFASTCARS) -->
+    <section id="partnerzy" class="py-20 bg-dark-surface border-b border-dark-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-dark-card border border-dark-border p-8 sm:p-12 glow-border relative overflow-hidden">
+                <div class="grid lg:grid-cols-12 gap-8 items-center">
+                    
+                    <div class="lg:col-span-8 space-y-4">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-redline-900/40 border border-redline-500/40 text-redline-500 text-[10px] font-mono font-bold uppercase">
+                            <i data-lucide="key" class="w-3.5 h-3.5"></i>
+                            Partner Flotowy RedLine
+                        </div>
+                        <h3 class="font-header text-2xl sm:text-4xl font-bold text-white">
+                            NIE MASZ SWOJEGO AUTA NA WYJAZD?
+                        </h3>
+                        <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                            Podjęliśmy współpracę z renomowaną wypożyczalnią aut sportowych <strong>OnlyFastCars</strong>. Jeśli chcesz poczuć naszą trasę za kierownicą potężnej maszyny, odbierz gwarantowaną zniżkę:
+                        </p>
+                    </div>
+
+                    <div class="lg:col-span-4 text-center bg-dark-base border border-dark-border p-6 space-y-3">
+                        <div class="text-[10px] font-mono uppercase tracking-widest text-slate-400">Dedykowany Kod Zniżkowy -10%</div>
+                        <div class="font-header text-3xl font-extrabold text-redline-500 tracking-wider bg-redline-950/40 border border-dashed border-redline-500 py-3">
+                            REDLINE10
+                        </div>
+                        <a href="https://onlyfastcars.pl" target="_blank" rel="noopener noreferrer" class="block w-full bg-white hover:bg-slate-200 text-black font-header font-bold text-xs uppercase tracking-widest py-3 transition-colors mt-2">
+                            Wypożycz Auto Ze Zniżką
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PHOTO GALLERY SECTION -->
+    <section id="galeria" class="py-24 bg-dark-base border-b border-dark-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+                <div>
+                    <span class="text-xs font-header uppercase tracking-[0.3em] text-redline-500 font-bold flex items-center gap-2">
+                        <i data-lucide="camera" class="w-4 h-4 text-redline-500"></i>
+                        W Obiektywie
+                    </span>
+                    <h2 class="font-header text-3xl sm:text-5xl font-bold text-white mt-2">
+                        KADRY Z POPRZEDNICH EDYCJI
+                    </h2>
+                </div>
+                <p class="text-slate-400 text-xs sm:text-sm max-w-md">
+                    Kliknij dowolne zdjęcie, aby otworzyć galerię w pełnym ekranie z obsługą gestów.
+                </p>
+            </div>
+
+            <!-- Gallery Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div class="gallery-item group aspect-square bg-dark-card border border-dark-border overflow-hidden cursor-pointer relative glow-border">
+                    <img src="IMG_4579.jpg" onError="this.src='https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=800&q=80'" alt="RedLine Event" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <i data-lucide="maximize-2" class="w-6 h-6 text-white"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item group aspect-square bg-dark-card border border-dark-border overflow-hidden cursor-pointer relative glow-border">
+                    <img src="Rs3.jpg" onError="this.src='https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=800&q=80'" alt="RedLine Event" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <i data-lucide="maximize-2" class="w-6 h-6 text-white"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item group aspect-square bg-dark-card border border-dark-border overflow-hidden cursor-pointer relative glow-border">
+                    <img src="IMG_8200.JPG" onError="this.src='https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=800&q=80'" alt="RedLine Event" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <i data-lucide="maximize-2" class="w-6 h-6 text-white"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item group aspect-square bg-dark-card border border-dark-border overflow-hidden cursor-pointer relative glow-border">
+                    <img src="DSC_0178.JPEG" onError="this.src='https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80'" alt="RedLine Event" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <i data-lucide="maximize-2" class="w-6 h-6 text-white"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item group aspect-square bg-dark-card border border-dark-border overflow-hidden cursor-pointer relative glow-border">
+                    <img src="BMW M4-13.jpg" onError="this.src='https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80'" alt="RedLine Event" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <i data-lucide="maximize-2" class="w-6 h-6 text-white"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item group aspect-square bg-dark-card border border-dark-border overflow-hidden cursor-pointer relative glow-border">
+                    <img src="RSQ8MTM-12.jpg" onError="this.src='https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=800&q=80'" alt="RedLine Event" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <i data-lucide="maximize-2" class="w-6 h-6 text-white"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item group aspect-square bg-dark-card border border-dark-border overflow-hidden cursor-pointer relative glow-border">
+                    <img src="DSC_0112.jpg" onError="this.src='https://images.unsplash.com/photo-1541348263662-e082662d82da?auto=format&fit=crop&w=800&q=80'" alt="RedLine Event" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <i data-lucide="maximize-2" class="w-6 h-6 text-white"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item group aspect-square bg-dark-card border border-dark-border overflow-hidden cursor-pointer relative glow-border">
+                    <img src="DSC_0108.jpg" onError="this.src='https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=800&q=80'" alt="RedLine Event" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <i data-lucide="maximize-2" class="w-6 h-6 text-white"></i>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- REGISTRATION FORM SECTION -->
+    <section id="zapisy" class="py-24 bg-dark-surface border-b border-dark-border relative">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center mb-12 space-y-3">
+                <span class="text-xs font-header uppercase tracking-[0.3em] text-redline-500 font-bold">
+                    Aplikacja Kierowcy
+                </span>
+                <h2 class="font-header text-3xl sm:text-5xl font-bold text-white">
+                    ZAREZERWUJ MIEJSCE W KOLUMNIE
+                </h2>
+                <p class="text-slate-400 text-xs sm:text-sm max-w-lg mx-auto">
+                    Wypełnij krótki formularz. Skontaktujemy się telefonicznie w celu przekazania szczegółów zbiórki i przydzielenia radiostacji.
+                </p>
+            </div>
+
+            <div class="bg-dark-card border border-dark-border p-8 sm:p-12 glow-red relative">
+                <form action="https://formsubmit.co/RedLinecars@proton.me" method="POST" enctype="multipart/form-data" class="space-y-6">
+                    
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_subject" value="Nowe zgłoszenie - RedLine cars event!">
+
+                    <div class="grid sm:grid-cols-2 gap-6">
+                        <div>
+                            <label for="name" class="block text-[10px] font-header uppercase tracking-widest text-slate-300 font-bold mb-2">
+                                Imię Kierowcy *
+                            </label>
+                            <input type="text" id="name" name="Imię" required placeholder="np. Tomasz" class="w-full bg-dark-base border border-dark-border focus:border-redline-500 text-slate-100 text-sm px-4 py-3.5 outline-none transition-colors">
+                        </div>
+
+                        <div>
+                            <label for="phone" class="block text-[10px] font-header uppercase tracking-widest text-slate-300 font-bold mb-2">
+                                Telefon Kontaktowy *
+                            </label>
+                            <input type="tel" id="phone" name="Telefon" required placeholder="+48 000 000 000" class="w-full bg-dark-base border border-dark-border focus:border-redline-500 text-slate-100 text-sm px-4 py-3.5 outline-none transition-colors">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="car" class="block text-[10px] font-header uppercase tracking-widest text-slate-300 font-bold mb-2">
+                            Marka, Model i Moc Auta *
+                        </label>
+                        <input type="text" id="car" name="Auto" required placeholder="np. BMW M4 Competition (510 KM)" class="w-full bg-dark-base border border-dark-border focus:border-redline-500 text-slate-100 text-sm px-4 py-3.5 outline-none transition-colors">
+                    </div>
+
+                    <div>
+                        <label for="photo" class="block text-[10px] font-header uppercase tracking-widest text-slate-300 font-bold mb-2">
+                            Zdjęcie Auta (Opcjonalnie)
+                        </label>
+                        <input type="file" id="photo" name="Zdjęcie_Auta" accept="image/*" class="w-full text-slate-400 text-xs bg-dark-base border border-dark-border p-3 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-xs file:font-header file:font-bold file:bg-dark-card file:text-slate-200 hover:file:bg-redline-500 hover:file:text-white transition-colors cursor-pointer">
+                    </div>
+
+                    <button type="submit" class="shimmer-btn w-full bg-redline-500 hover:bg-redline-600 text-white font-header font-bold text-xs uppercase tracking-widest py-4 transition-all shadow-xl shadow-redline-950/60 flex items-center justify-center gap-2">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                        <span>Wyślij Zgłoszenie na Wyjazd</span>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-dark-base py-12 border-t border-dark-border text-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+            
+            <a href="https://www.instagram.com/redline.oneee/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-header font-bold uppercase tracking-widest text-slate-300 hover:text-redline-500 border border-dark-border px-6 py-3 bg-dark-surface transition-colors">
+                <i data-lucide="instagram" class="w-4 h-4 text-redline-500"></i>
+                <span>Obserwuj @redline.oneee na Instagramie</span>
+            </a>
+
+            <div class="text-[11px] text-slate-500 font-mono">
+                &copy; 2026 RedLine Cars Event. Wszystkie prawa zastrzeżone. Dolny Śląsk & Czechy.
+            </div>
+        </div>
+    </footer>
+
+    <!-- LIGHTBOX MODAL -->
+    <div id="lightbox" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl hidden flex items-center justify-center p-4">
+        <button id="lightboxClose" class="absolute top-6 right-6 text-slate-400 hover:text-white p-2 border border-dark-border bg-dark-card z-10">
+            <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+
+        <button id="lightboxPrev" class="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-dark-card hover:bg-redline-500 text-white border border-dark-border transition-colors">
+            <i data-lucide="chevron-left" class="w-6 h-6"></i>
+        </button>
+
+        <div class="max-w-5xl w-full max-h-[85vh] flex items-center justify-center">
+            <img id="lightboxImg" src="" alt="Full Preview" class="max-w-full max-h-[80vh] object-contain border border-dark-border shadow-2xl">
+        </div>
+
+        <button id="lightboxNext" class="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-dark-card hover:bg-redline-500 text-white border border-dark-border transition-colors">
+            <i data-lucide="chevron-right" class="w-6 h-6"></i>
+        </button>
+    </div>
+
+    <!-- MOBILE STICKY BOTTOM BAR -->
+    <div class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-dark-base/95 border-t border-dark-border p-3 backdrop-blur-lg flex items-center justify-between gap-3 shadow-2xl">
+        <div>
+            <div class="text-[10px] font-header font-bold text-white uppercase">RedLine Event 2026</div>
+            <div class="text-[9px] font-mono text-redline-500">Červenohorské Sedlo • 282 KM</div>
+        </div>
+        <a href="#zapisy" class="bg-redline-500 text-white font-header font-bold text-[11px] uppercase tracking-wider px-5 py-2.5 flex items-center gap-1.5 shrink-0 shadow-lg">
+            <span>Zgłoś Auto</span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        </a>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // Mode Toggle Logic with localStorage Persistence
-            const modeToggle = document.getElementById('modeToggle');
-            const modeText = document.getElementById('modeText');
-            
-            const savedMode = localStorage.getItem('redline_mode');
-            if (savedMode === 'sport') {
-                document.body.classList.add('sport-mode');
-                modeText.textContent = 'Lounge Vibe';
-            } else {
-                modeText.textContent = 'Sport Mode';
-            }
-            
-            modeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('sport-mode');
-                if (document.body.classList.contains('sport-mode')) {
-                    modeText.textContent = 'Lounge Vibe';
-                    localStorage.setItem('redline_mode', 'sport');
-                } else {
-                    modeText.textContent = 'Sport Mode';
-                    localStorage.setItem('redline_mode', 'lounge');
-                }
+            // Initialize Lucide Icons
+            lucide.createIcons();
+
+            // Mobile Menu Toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileLinks = document.querySelectorAll('.mobile-link');
+
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
             });
 
-            // Scroll Reveal Observer
-            const reveals = document.querySelectorAll(".reveal");
-
-            const revealOnScroll = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add("active");
-                        observer.unobserve(entry.target); 
-                    }
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
                 });
-            }, {
-                threshold: 0.15,
-                rootMargin: "0px 0px -50px 0px"
             });
 
-            reveals.forEach(reveal => {
-                revealOnScroll.observe(reveal);
-            });
-            
-            setTimeout(() => {
-                document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('active'));
-            }, 100);
+            // Countdown Timer
+            const targetDate = new Date('2026-10-24T09:00:00').getTime();
 
-            // Dynamic Car Placeholder
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const diff = targetDate - now;
+
+                if (diff > 0) {
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                    document.getElementById('timerDays').textContent = String(days).padStart(2, '0');
+                    document.getElementById('timerHours').textContent = String(hours).padStart(2, '0');
+                    document.getElementById('timerMinutes').textContent = String(minutes).padStart(2, '0');
+                    document.getElementById('timerSeconds').textContent = String(seconds).padStart(2, '0');
+                }
+            }
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+
+            // Dynamic Car Input Placeholder
             const carModels = [
                 "BMW M4 Competition xDrive", "Audi RS6 Avant", "Mercedes-AMG E 63 S", 
-                "BMW M5 Competition", "Audi RS7 Sportback", "Mercedes-AMG GT 63 S 4-Door Coupe", 
-                "BMW M3 Touring", "Audi RS e-tron GT", "Mercedes-AMG C 63 S E Performance", 
-                "BMW M2 Coupe", "Mercedes-AMG GT S", "Porsche 911 Carrera GTS", 
-                "Porsche Cayman GT4 RS", "Aston Martin Vantage V8", "Ferrari California T", 
-                "Lotus Emira V6", "Jaguar F-Type SVR", "Audi RS4 Avant", "BMW Z4 M Coupe", 
-                "Audi R8 V10 Manual", "Honda NSX", "Ford Mustang Shelby GT500", 
-                "Chevrolet Camaro ZL1 1LE", "Toyota Supra", "Lexus LC 500 V8", "Audi RS3", 
-                "Mercedes-AMG A 45 S", "BMW M440i xDrive", "Audi RS5 Coupe", 
-                "Audi RS5 Sportback", "BMW M340i xDrive", "BMW M240i xDrive", 
-                "Mercedes-AMG CLA 45 S", "Mercedes-AMG C 43", "Mercedes-AMG GLA 45 S", 
-                "Audi RS Q3 Sportback", "BMW X3 M Competition", "Alfa Romeo Giulia Quadrifoglio"
+                "BMW M5 Competition", "Audi RS7 Sportback", "Porsche 911 GT3", 
+                "BMW M3 Touring", "Mercedes-AMG C 63 S", "BMW M2 Coupe", "Porsche Cayman GT4 RS"
             ];
-            
             const randomCar = carModels[Math.floor(Math.random() * carModels.length)];
             const carInput = document.getElementById("car");
-            
-            if(carInput) {
+            if (carInput) {
                 carInput.placeholder = "np. " + randomCar;
             }
 
-            // Lightbox Gallery Logic
+            // Lightbox Gallery
             const galleryItems = document.querySelectorAll('.gallery-item');
             const lightbox = document.getElementById('lightbox');
-            const lightboxContainer = document.querySelector('.lightbox-media-container');
-            const closeBtn = document.querySelector('.lightbox-close');
-            const prevBtn = document.querySelector('.lightbox-prev');
-            const nextBtn = document.querySelector('.lightbox-next');
-            
-            let currentIndex = 0;
-            const mediaElements = Array.from(galleryItems).map(item => item.firstElementChild);
+            const lightboxImg = document.getElementById('lightboxImg');
+            const lightboxClose = document.getElementById('lightboxClose');
+            const lightboxPrev = document.getElementById('lightboxPrev');
+            const lightboxNext = document.getElementById('lightboxNext');
 
-            function updateLightbox() {
-                lightboxContainer.innerHTML = '';
-                const mediaNode = mediaElements[currentIndex].cloneNode(true);
-                lightboxContainer.appendChild(mediaNode);
+            let currentIndex = 0;
+            const images = Array.from(galleryItems).map(item => item.querySelector('img').src);
+
+            function showImage(index) {
+                currentIndex = index;
+                lightboxImg.src = images[currentIndex];
             }
 
             galleryItems.forEach((item, index) => {
                 item.addEventListener('click', () => {
-                    currentIndex = index;
-                    updateLightbox();
-                    lightbox.classList.add('active');
-                    document.body.style.overflow = 'hidden'; 
+                    showImage(index);
+                    lightbox.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
                 });
             });
 
-            function showNext() {
-                currentIndex = (currentIndex + 1) % mediaElements.length;
-                updateLightbox();
-            }
-
-            function showPrev() {
-                currentIndex = (currentIndex - 1 + mediaElements.length) % mediaElements.length;
-                updateLightbox();
-            }
-
-            closeBtn.addEventListener('click', () => {
-                lightbox.classList.remove('active');
-                setTimeout(() => {
-                    lightboxContainer.innerHTML = ''; 
-                }, 500); 
-                document.body.style.overflow = 'auto'; 
+            lightboxClose.addEventListener('click', () => {
+                lightbox.classList.add('hidden');
+                document.body.style.overflow = 'auto';
             });
 
-            nextBtn.addEventListener('click', showNext);
-            prevBtn.addEventListener('click', showPrev);
+            lightboxNext.addEventListener('click', () => {
+                showImage((currentIndex + 1) % images.length);
+            });
+
+            lightboxPrev.addEventListener('click', () => {
+                showImage((currentIndex - 1 + images.length) % images.length);
+            });
 
             lightbox.addEventListener('click', (e) => {
-                if(e.target === lightbox || e.target === lightboxContainer) {
-                    lightbox.classList.remove('active');
-                    setTimeout(() => {
-                        lightboxContainer.innerHTML = '';
-                    }, 500);
+                if (e.target === lightbox) {
+                    lightbox.classList.add('hidden');
                     document.body.style.overflow = 'auto';
                 }
             });
 
             document.addEventListener('keydown', (e) => {
-                if(!lightbox.classList.contains('active')) return;
-                
-                if(e.key === 'ArrowRight') showNext();
-                if(e.key === 'ArrowLeft') showPrev();
-                if(e.key === 'Escape') {
-                    lightbox.classList.remove('active');
-                    setTimeout(() => {
-                        lightboxContainer.innerHTML = '';
-                    }, 500);
+                if (lightbox.classList.contains('hidden')) return;
+                if (e.key === 'ArrowRight') showImage((currentIndex + 1) % images.length);
+                if (e.key === 'ArrowLeft') showImage((currentIndex - 1 + images.length) % images.length);
+                if (e.key === 'Escape') {
+                    lightbox.classList.add('hidden');
                     document.body.style.overflow = 'auto';
                 }
             });
