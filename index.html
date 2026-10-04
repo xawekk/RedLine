@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>RedLine Cars Event | Wyjazdy Samochodowe na Dolnym Śląsku & Czechach</title>
     
+    <!-- Open Graph / Social Media Sharing Metadata -->
+    <meta property="og:title" content="RedLine Cars Event | Wyjazdy Samochodowe na Dolnym Śląsku & Czechach">
+    <meta property="og:description" content="Dołącz do zamkniętej grupy kierowców aut sportowych na wyselekcjonowanej trasie 282 KM przez najlepsze asfalty i winkle regionu.">
+    <meta property="og:image" content="trasa2.jpg">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="RedLine Cars Event | Wyjazdy Samochodowe">
+    <meta name="twitter:description" content="Dolny Śląsk & Czechy • Červenohorské Sedlo • 24.10.2026">
+    <meta name="twitter:image" content="trasa2.jpg">
+
     <!-- Google Fonts & Tailwind CSS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -796,26 +806,30 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // Smart image fallback handler for local file extensions
+        // Smart image fallback handler for local file extensions & route previews
         function handleImgError(img) {
-            if (!img.dataset.triedLower && (img.src.endsWith('.JPG') || img.src.endsWith('.JPEG'))) {
-                img.dataset.triedLower = 'true';
-                img.src = img.src.replace(/\.JPG$/, '.jpg').replace(/\.JPEG$/, '.jpg');
+            if (!img.dataset.tryCount) {
+                img.dataset.tryCount = '0';
+            }
+            const count = parseInt(img.dataset.tryCount, 10);
+            const rawSrc = img.getAttribute('src') || '';
+            const basePath = rawSrc.replace(/\.(jpg|jpeg|png|webp|JPG|JPEG|PNG|WEBP)$/i, '');
+            
+            const extensions = ['.jpg', '.JPG', '.png', '.PNG', '.jpeg', '.JPEG', '.webp'];
+            
+            if (count < extensions.length) {
+                img.dataset.tryCount = (count + 1).toString();
+                img.src = basePath + extensions[count];
                 return;
             }
-            if (!img.dataset.triedUpper && img.src.endsWith('.jpg')) {
-                img.dataset.triedUpper = 'true';
-                img.src = img.src.replace(/\.jpg$/, '.JPG');
-                return;
-            }
-            if (!img.dataset.triedJpeg && img.src.endsWith('.jpg')) {
-                img.dataset.triedJpeg = 'true';
-                img.src = img.src.replace(/\.jpg$/, '.JPEG');
-                return;
-            }
-            // If all local file attempts fail, keep a clean dark car placeholder
+
+            // Fallback image if local file is missing before GitHub commit
             img.onerror = null;
-            img.src = 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=800&q=80';
+            if (img.id === 'heroFeaturedImg' || rawSrc.toLowerCase().includes('trasa')) {
+                img.src = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80';
+            } else {
+                img.src = 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=800&q=80';
+            }
         }
 
         document.addEventListener("DOMContentLoaded", () => {
